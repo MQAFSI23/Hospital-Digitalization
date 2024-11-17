@@ -1,1 +1,28 @@
 .env
+# Node.js dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.idea/
+.vscode/
+
+# Logs and temp files
+*.log
+*.bak
+*.swp
+
+# Sensitive files
+.env
+config.json
+
+# Database backups
+*.sql
+
