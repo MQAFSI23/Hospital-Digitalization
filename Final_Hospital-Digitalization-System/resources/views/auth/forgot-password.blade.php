@@ -21,7 +21,7 @@
 
                 <div class="w-full transform text-gray-800 border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
                     <input type="text" for="email" id="email" name="email" placeholder="Email"
-                        class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none" required autocomplete="off" />
+                        class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none" required autofocus autocomplete="off" />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 

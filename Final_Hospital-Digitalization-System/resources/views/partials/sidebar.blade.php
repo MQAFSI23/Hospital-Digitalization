@@ -1,24 +1,21 @@
 <nav class="bg-indigo-950 w-80 h-screen flex flex-col gap-10 border-r border-slate-100">
     <!-- Logo -->
-    <div class="logo text-2xl font-bold text-center h-16 flex items-center justify-center text-white">Hozpitalz</div>
+    <div class="logo text-3xl font-bold text-center h-16 flex items-center justify-center text-white">Hozpitalz</div>
 
     <!-- User Info -->
     <div class="user flex items-center justify-center flex-col gap-4 border-b border-slate-50 py-4">
-        <img class="w-24 rounded-full shadow-xl" src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png">
+        @auth
+            @if (auth()->user()->role === 'admin')
+                <img class="w-24 rounded-full shadow-xl bg-white" src="{{ asset('/images/svg/adminPP.svg') }}">
+            @elseif (auth()->user()->role === 'dokter')
+                <img class="w-24 rounded-full shadow-xl bg-white" src="{{ asset('/images/svg/doctorPP.svg') }}">
+            @elseif (auth()->user()->role === 'pasien')
+                <img class="w-24 rounded-full shadow-xl bg-white" src="{{ asset('/images/svg/pasienPP.svg') }}">
+            @endif
+        @endauth
         <div class="flex flex-col items-center">
-            <span class="font-semibold text-lg text-white">{{ auth()->user()->name ?? 'Guest' }}</span>
-            <span class="text-slate-300 text-sm">{{ auth()->user()->role ?? 'User' }}</span>
-        </div>
-        <div class="text-sm text-slate-400">
-            @auth
-                @if (auth()->user()->role === 'admin')
-                    <span class="font-semibold text-slate-300">Dokter yang Sedang Bertugas</span> ({{ $currentDoctorsCount ?? 0 }})
-                @elseif (auth()->user()->role === 'dokter')
-                    <span class="font-semibold text-slate-300">Pasien yang Sedang Diperiksa</span> ({{ $currentPatientsCount ?? 0 }})
-                @elseif (auth()->user()->role === 'pasien')
-                    <span class="font-semibold text-slate-300">Notifikasi Tindakan Medis</span> ({{ $notificationsCount ?? 0 }})
-                @endif
-            @endauth
+            <span class="font-semibold text-lg text-white">{{ auth()->user()->name }}</span>
+            <span class="text-slate-300 text-sm">{{ ucfirst(auth()->user()->role) }}</span>
         </div>
     </div>
 
@@ -33,7 +30,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
+                    <a href="{{ route('admin.daftarPengguna') }}" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
                         Daftar Pengguna
                     </a>
                 </li>
@@ -99,6 +96,7 @@
     <div class="px-6 py-4">
         <form method="POST" action="{{ route('logout') }}">
             @csrf
+            
             <button type="submit" class="w-full text-left px-4 py-2.5 text-red-600 font-semibold hover:bg-red-600 hover:text-white rounded-lg">
                 Keluar
             </button>

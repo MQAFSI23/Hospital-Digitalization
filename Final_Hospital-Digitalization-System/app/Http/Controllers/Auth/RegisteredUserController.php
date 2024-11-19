@@ -30,7 +30,9 @@ class RegisteredUserController extends Controller
     public function storePasien(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:127', 'alpha'],
+            'name' => ['required', 'string', 'max:127'],
+            'tanggal_lahir' => ['required', 'date'],
+            'jenis_kelamin' => ['required', 'in:pria,wanita'],
             'username' => ['required', 'string', 'max:15', 'unique:users,username', 'alpha_num'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:127', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -38,6 +40,8 @@ class RegisteredUserController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -65,7 +69,9 @@ class RegisteredUserController extends Controller
     public function storeAdmin(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:127', 'alpha'],
+            'name' => ['required', 'string', 'max:127'],
+            'tanggal_lahir' => ['required', 'date'],
+            'jenis_kelamin' => ['required', 'in:pria,wanita'],
             'username' => ['required', 'string', 'max:15', 'unique:users,username', 'alpha_num'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:127', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -74,6 +80,8 @@ class RegisteredUserController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),

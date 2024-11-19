@@ -1,31 +1,48 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
+            {{ __('Informasi Profil') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("Perbarui nama dan alamat email akun Anda.") }}
         </p>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
+    <!-- Read-Only Username -->
+    <div class="mt-4">
+        <x-input-label for="username" :value="__('Username')" />
+        <x-text-input id="username" name="username" type="text" class="relative w-full transform border-b-2 bg-gray-100 text-lg duration-300 focus-within:border-indigo-500 mt-6 cursor-not-allowed" :value="old('username', $user->username)" readonly />
+    </div>
 
+    <!-- Read-Only Date of Birth -->
+    <div class="mt-4">
+        <x-input-label for="tanggal_lahir" :value="__('Tanggal Lahir')" />
+        <x-text-input id="tanggal_lahir" name="tanggal_lahir" type="text" class="relative w-full transform border-b-2 bg-gray-100 text-lg duration-300 focus-within:border-indigo-500 mt-6 cursor-not-allowed" :value="old('tanggal_lahir', $user->tanggal_lahir)" readonly />
+    </div>
+
+    <!-- Read-Only Gender -->
+    <div class="mt-4">
+        <x-input-label for="jenis_kelamin" :value="__('Jenis Kelamin')" />
+        <x-text-input id="jenis_kelamin" name="jenis_kelamin" type="text" class="relative w-full transform border-b-2 bg-gray-100 text-lg duration-300 focus-within:border-indigo-500 mt-6 cursor-not-allowed" :value="old('jenis_kelamin', ucfirst($user->jenis_kelamin))" readonly />
+    </div>
+
+    <!-- Editable Form (Name and Email) -->
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
-
+        
+        <!-- Name (Editable) -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <x-input-label for="name" :value="__('Nama')" />
+            <x-text-input id="name" name="name" type="text" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-4" :value="old('name', $user->name)" required autofocus autocomplete="off" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
+        <!-- Email (Editable) -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
+            <x-text-input id="email" name="email" type="email" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-4" :value="old('email', $user->email)" required autocomplete="off" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
@@ -48,7 +65,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('Simpan') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -57,7 +74,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                >{{ __('Disimpan.') }}</p>
             @endif
         </div>
     </form>

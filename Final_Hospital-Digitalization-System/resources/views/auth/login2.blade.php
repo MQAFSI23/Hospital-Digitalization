@@ -24,7 +24,7 @@
         <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
             <input type="text" id="user_id" name="user_id" placeholder="Email or Username"
                 class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
-                value="{{ old('user_id') ?? '' }}" required autocomplete="off">
+                value="{{ old('user_id') ?? '' }}" required autofocus autocomplete="off">
         </div>
 
         <!-- Password -->
@@ -49,7 +49,7 @@
         <div class="block mt-6">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ml-2 text-sm text-gray-400">Remember me</span>
+                <span class="ml-2 text-sm text-gray-400">{{ __('Remember me') }}</span>
             </label>
         </div>
 

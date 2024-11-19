@@ -15,10 +15,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-indigo-950 text-white">
 
     <main class="mx-auto flex min-h-screen w-full items-center justify-center">
         @yield('content')
