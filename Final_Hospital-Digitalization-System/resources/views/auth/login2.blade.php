@@ -3,7 +3,7 @@
 @section('title', 'Log In')
 
 @section('content')
-<section class="flex w-[30rem] flex-col space-y-10">
+<section class="flex flex-col w-full max-w-lg px-8 sm:px-8 lg:px-8 space-y-10">
     <div class="text-center">
         <img src="{{ asset('/images/hospitalLogo.png') }}" alt="Hospital Logo" class="w-40 h-40 mx-auto mb-4">
     </div>
@@ -17,7 +17,7 @@
     @endif
 
     <!-- Form Login -->
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" class="space-y-6">
         @csrf
 
         <!-- Email Address or Username -->

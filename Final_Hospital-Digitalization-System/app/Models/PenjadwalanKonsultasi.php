@@ -12,10 +12,11 @@ class PenjadwalanKonsultasi extends Model
     protected $table = 'penjadwalan_konsultasi';
 
     protected $fillable = [
-        'id_pasien',
-        'id_dokter',
+        'pasien_id',
+        'dokter_id',
         'tanggal_konsultasi',
         'konfirmasi',
+        'selesai',
     ];
 
     /**
@@ -23,7 +24,7 @@ class PenjadwalanKonsultasi extends Model
      */
     public function pasien()
     {
-        return $this->belongsTo(User::class, 'id_pasien');
+        return $this->belongsTo(User::class, 'pasien_id');
     }
 
     /**
@@ -31,7 +32,7 @@ class PenjadwalanKonsultasi extends Model
      */
     public function dokter()
     {
-        return $this->belongsTo(User::class, 'id_dokter');
+        return $this->belongsTo(Dokter::class, 'dokter_id');
     }
 
     public function isDokter()

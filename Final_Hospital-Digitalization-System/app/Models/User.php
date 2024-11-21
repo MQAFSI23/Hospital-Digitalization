@@ -38,20 +38,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Feedback::class, 'pasien_id');
     }
 
-    /**
-     * Menentukan apakah user adalah Dokter.
-     */
-    public function isDokter()
+    // Relasi ke model Dokter
+    public function dokter()
     {
-        return $this->role === 'dokter';
-    }
-
-    /**
-     * Menentukan apakah user adalah Pasien.
-     */
-    public function isPasien()
-    {
-        return $this->role === 'pasien';
+        return $this->hasOne(Dokter::class, 'dokter_id');
     }
 
     /**
@@ -84,12 +74,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function konsultasiDokter()
     {
         return $this->hasMany(PenjadwalanKonsultasi::class, 'id_dokter');
-    }
-
-    // Relasi dengan JadwalTugas
-    public function jadwalTugas()
-    {
-        return $this->hasMany(JadwalTugas::class);
     }
 
     // Relasi untuk pasien yang memiliki banyak tindakan medis

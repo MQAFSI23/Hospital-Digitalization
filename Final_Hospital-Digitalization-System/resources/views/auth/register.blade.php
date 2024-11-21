@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 
 @section('content')
-    <section class="flex w-[30rem] flex-col space-y-10">
+    <section class="flex flex-col w-full max-w-lg px-8 sm:px-8 lg:px-8 space-y-10">
         <!-- Judul Halaman -->
         <div class="text-center text-4xl font-medium">Register</div>
 

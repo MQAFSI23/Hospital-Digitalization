@@ -8,6 +8,8 @@
     <!-- Alpine.js for interactivity -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 
+    <link rel="icon" type="image/png" href="{{ asset('/images/hospitalLogo.png') }}">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -28,9 +30,7 @@
             <header class="bg-indigo-950 p-4 flex items-center justify-between lg:hidden sticky top-0 z-30">
                 <!-- Button for Opening/Closing Sidebar -->
                 <button @click="open = !open" class="text-gray-800 focus:outline-none">
-                    <!-- Gambar dengan rotasi yang bergantung pada kondisi open -->
-                    <img src="{{ asset('images/sidebar-btn.png') }}" alt="Menu" class="h-6 w-6" 
-                        :style="open ? 'transform: rotate(90deg); transition: transform 0.3s;' : 'transform: rotate(0deg); transition: transform 0.3s;'">
+                    <img src="{{ asset('images/sidebar-btn.png') }}" alt="Menu" class="h-6 w-6">
                 </button>
                 <h2 class="text-3xl font-bold text-white">Hozpitalz</h2>
             </header>

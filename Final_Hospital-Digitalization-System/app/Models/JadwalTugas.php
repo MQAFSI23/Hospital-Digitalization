@@ -9,10 +9,10 @@ class JadwalTugas extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['dokter_id', 'hari_tugas'];
+    protected $fillable = ['dokter_id', 'hari_tugas', 'jam_mulai', 'jam_selesai'];
 
-    public function user()
+    public function dokter()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Dokter::class, 'dokter_id');
     }
 }

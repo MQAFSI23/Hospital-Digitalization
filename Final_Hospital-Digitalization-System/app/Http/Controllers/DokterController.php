@@ -12,7 +12,7 @@ class DokterController extends Controller
     {
         $dokterId = auth()->user()->id;
 
-        $jumlahPasienHariIni = PenjadwalanKonsultasi::where('id_dokter', $dokterId)
+        $jumlahPasienHariIni = PenjadwalanKonsultasi::where('dokter_id', $dokterId)
             ->whereDate('tanggal_konsultasi', Carbon::today())
             ->count();
 

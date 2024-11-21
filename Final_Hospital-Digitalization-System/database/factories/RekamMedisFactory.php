@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\RekamMedis;
 use App\Models\User;
+use App\Models\Dokter;
 use App\Models\Obat;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,7 +16,7 @@ class RekamMedisFactory extends Factory
     {
         return [
             'pasien_id' => User::where('role', 'pasien')->inRandomOrder()->first()->id,
-            'dokter_id' => User::where('role', 'dokter')->inRandomOrder()->first()->id,
+            'dokter_id' => Dokter::inRandomOrder()->first()->id,
             'tindakan' => $this->faker->sentence(),
             'tanggal_berobat' => $this->faker->date(),
         ];

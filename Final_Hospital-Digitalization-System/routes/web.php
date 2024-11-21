@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ObatController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\PasienController;
@@ -26,23 +27,54 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin Routes
     Route::middleware('role:admin')->group(function () {
+        // Dashboard
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
             ->name('admin.dashboard');
 
+        // Daftar Pengguna
         Route::get('/admin/daftar-pengguna', [AdminController::class, 'daftarPengguna'])
             ->name('admin.daftarPengguna');
+
+        Route::get('/admin/detail-pengguna/{id}', [AdminController::class, 'detailPengguna'])
+            ->name('admin.detailPengguna');
 
         Route::get('/admin/edit-pengguna/{id}', [AdminController::class, 'editPengguna'])
             ->name('admin.editPengguna');
 
+        Route::put('/admin/update-pengguna/{id}', [AdminController::class, 'updatePengguna'])
+            ->name('admin.updatePengguna');
+
         Route::delete('/admin/hapus-pengguna/{id}', [AdminController::class, 'hapusPengguna'])
             ->name('admin.hapusPengguna');
 
+        // Register Admin
         Route::get('/register-admin', [RegisteredUserController::class, 'createAdmin'])
             ->name('register-admin');
-
+        
         Route::post('/register-admin', [RegisteredUserController::class, 'storeAdmin'])
             ->name('register-admin.store');
+
+        // Daftar Obat
+        Route::get('/admin/daftar-obat', [ObatController::class, 'daftarObat'])
+            ->name('admin.daftarObat');
+
+        Route::get('/admin/detail-obat/{id}', [ObatController::class, 'detailObat'])
+            ->name('admin.detailObat');
+
+        Route::get('/admin/edit-obat/{id}', [ObatController::class, 'editObat'])
+            ->name('admin.editObat');
+
+        Route::put('/admin/update-obat/{id}', [ObatController::class, 'updateObat'])
+            ->name('admin.updateObat');
+
+        Route::delete('/admin/hapus-obat/{id}', [ObatController::class, 'hapusObat'])
+            ->name('admin.hapusObat');
+
+        Route::get('/admin/register-obat', [ObatController::class, 'registerObat'])
+            ->name('admin.registerObat');
+
+        Route::post('/admin/register-obat', [ObatController::class, 'storeObat'])
+            ->name('admin.registerObat.store');
     });
 
     // Dokter Routes

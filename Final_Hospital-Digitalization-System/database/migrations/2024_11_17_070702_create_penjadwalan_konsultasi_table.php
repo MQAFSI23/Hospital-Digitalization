@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('penjadwalan_konsultasi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_pasien')->constrained('users')->onDelete('cascade');
-            $table->foreignId('id_dokter')->constrained('users')->onDelete('cascade');
+            $table->foreignId('pasien_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('dokter_id')->constrained('dokter')->onDelete('cascade');
             $table->enum('konfirmasi', ['ya', 'tidak'])->default('tidak');
+            $table->enum('selesai', ['ya', 'tidak'])->default('tidak');
             $table->dateTime('tanggal_konsultasi');
             $table->timestamps();
         });
