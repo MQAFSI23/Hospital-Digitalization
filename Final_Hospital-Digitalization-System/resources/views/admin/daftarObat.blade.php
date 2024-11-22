@@ -10,8 +10,8 @@
     <div class="py-10">
         <h1 class="text-3xl font-bold text-gray-800">Daftar Obat</h1>
 
-        <div class="mt-8">
-            <a href="{{ route('admin.registerObat') }}" class="bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+        <div class="mt-8 flex justify-center sm:justify-start">
+            <a href="{{ route('admin.registerObat') }}" class="w-full sm:w-auto max-w-xs sm:max-w-none bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
                 Register Obat Baru
             </a>
         </div>
@@ -19,18 +19,21 @@
         <!-- Filter Form -->
         <form action="{{ route('admin.daftarObat') }}" method="GET" class="mt-8">
             @csrf
-            <div class="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
 
                 <!-- Search by Name -->
-                <div class="mb-4 sm:mb-0">
+                <div>
                     <label for="search" class="block text-sm font-medium">Cari Nama Obat</label>
-                    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Masukkan nama obat" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                    <input type="text" name="search" id="search" value="{{ request('search') }}" 
+                        placeholder="Masukkan nama obat" 
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded">
                 </div>
 
                 <!-- Filter Status Ketersediaan Obat -->
-                <div class="mb-4 sm:mb-0">
-                    <label for="status_ketersediaan" class="block text-sm font-medium">Status Ketersediaan</label>
-                    <select name="status_ketersediaan" id="status_ketersediaan" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                <div>
+                    <label for="status_ketersediaan" class="block text-sm font-medium">Status</label>
+                    <select name="status_ketersediaan" id="status_ketersediaan" 
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded">
                         <option value="">Semua Status</option>
                         <option value="tersedia" {{ request('status_ketersediaan') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
                         <option value="tidak tersedia" {{ request('status_ketersediaan') == 'tidak tersedia' ? 'selected' : '' }}>Tidak Tersedia</option>
@@ -38,7 +41,33 @@
                     </select>
                 </div>
 
-                <button type="submit" class="bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+                <!-- Sort By -->
+                <div>
+                    <label for="sort_by" class="block text-sm font-medium">Urutkan Berdasarkan</label>
+                    <select name="sort_by" id="sort_by" 
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                        <option value="">Pilih Urutan</option>
+                        <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>Nama Obat</option>
+                        <option value="stok" {{ request('sort_by') == 'stok' ? 'selected' : '' }}>Stok Obat</option>
+                        <option value="kedaluwarsa" {{ request('sort_by') == 'kedaluwarsa' ? 'selected' : '' }}>Tanggal Kedaluwarsa</option>
+                    </select>
+                </div>
+
+                <!-- Sort Order -->
+                <div>
+                    <label for="sort_order" class="block text-sm font-medium">Arah Urutan</label>
+                    <select name="sort_order" id="sort_order" 
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                        <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Menaik</option>
+                        <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>Menurun</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end">
+                <button type="submit" 
+                    class="bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded">
                     Filter
                 </button>
             </div>

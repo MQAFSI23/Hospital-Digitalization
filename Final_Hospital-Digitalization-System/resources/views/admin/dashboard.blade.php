@@ -50,7 +50,7 @@
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 <td class="py-2 px-4">{{ $jadwal->dokter->user->name }}</td> <!-- Nama Dokter -->
                                 <td class="py-2 px-4">{{ ucfirst($jadwal->dokter->jenis_dokter) }}</td> <!-- Jenis Dokter -->
-                                <td class="py-2 px-4">{{ $jadwal->dokter->spesialisasi ?? '-' }}</td> <!-- Spesialisasi -->
+                                <td class="py-2 px-4">{{ ucfirst($jadwal->dokter->spesialisasi) ?? '-' }}</td> <!-- Spesialisasi -->
                                 <td class="py-2 px-4">{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td> <!-- Jam Tugas -->
                             </tr>
                         @endforeach
@@ -60,8 +60,9 @@
         </div>
 
         <!-- Register User Baru -->
-        <div class="mt-8">
-            <a href="{{ route('register-admin') }}" class="bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+        <div class="mt-8 flex justify-center sm:justify-start">
+            <a href="{{ route('register-admin') }}" 
+                class="w-full sm:w-auto max-w-xs sm:max-w-none bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-center">
                 Register User Baru
             </a>
         </div>

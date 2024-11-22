@@ -53,6 +53,15 @@ class AdminController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
+        if ($request->filled('sort_by')) {
+            $sortBy = $request->sort_by;
+            $sortOrder = $request->sort_order ?: 'asc';
+
+            if (in_array($sortBy, ['name', 'role', 'created_at'])) {
+                $query->orderBy($sortBy, $sortOrder);
+            }
+        }
+
         $daftarPengguna = $query->get();
 
         return view('admin.daftarPengguna', compact('daftarPengguna'));

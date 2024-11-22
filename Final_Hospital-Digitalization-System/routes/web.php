@@ -75,6 +75,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('/admin/register-obat', [ObatController::class, 'storeObat'])
             ->name('admin.registerObat.store');
+            
+        Route::get('/admin/log-obat', [ObatController::class, 'logObat'])
+            ->name('admin.logObat');
     });
 
     // Dokter Routes

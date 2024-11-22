@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dokter', function (Blueprint $table) {
+        Schema::create('log_obat', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dokter_id')->constrained('users')->onDelete('cascade');
-            $table->enum('jenis_dokter', ['umum', 'spesialis']);
-            $table->enum('spesialisasi', ['kardiologi', 'neurologi', 'gastroenterologi', 'pediatri', 'pulmonologi'])->nullable();
+            $table->foreignId('obat_id')->constrained('obat')->onDelete('cascade');
+            $table->integer('jumlah');
+            $table->enum('status', ['terisi', 'terjual']);
+            $table->timestamp('tanggal_log')->useCurrent();
             $table->timestamps();
-        });
+        });;
     }
 
     /**
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dokter');
+        Schema::dropIfExists('log_obat');
     }
 };

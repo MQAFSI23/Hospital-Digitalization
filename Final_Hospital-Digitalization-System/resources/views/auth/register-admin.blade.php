@@ -94,15 +94,41 @@
                 <div class="text-red-500 mt-2">{{ $message }}</div>
             @enderror
 
-            <!-- Role Selection (Admin Only) -->
+            <!-- Role Selection -->
             <div class="mt-6">
-                <x-input-label for="role" :value="__('Role')"  />
+                <x-input-label for="role" :value="__('Role')" />
                 <select id="role" name="role" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500" required>
                     <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="dokter" {{ old('role') === 'dokter' ? 'selected' : '' }}>Dokter</option>
                     <option value="pasien" {{ old('role') === 'pasien' ? 'selected' : '' }}>Pasien</option>
                 </select>
                 <x-input-error :messages="$errors->get('role')" class="mt-2" />
+            </div>
+
+            <!-- Additional Inputs for Dokter -->
+            <div id="dokterDetails" class="hidden mt-6">
+                <!-- Jenis Dokter -->
+                <div class="mt-6">
+                    <x-input-label for="jenis_dokter" :value="__('Jenis Dokter')" />
+                    <select id="jenis_dokter" name="jenis_dokter" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500" required>
+                        <option value="umum">Umum</option>
+                        <option value="spesialis">Spesialis</option>
+                    </select>
+                    <x-input-error :messages="$errors->get('jenis_dokter')" class="mt-2" />
+                </div>
+
+                <!-- Spesialisasi -->
+                <div id="spesialisasiField" class="hidden mt-6">
+                    <x-input-label for="spesialisasi" :value="__('Spesialisasi')" />
+                    <select id="spesialisasi" name="spesialisasi" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
+                        <option value="kardiologi">Kardiologi</option>
+                        <option value="neurologi">Neurologi</option>
+                        <option value="gastroenterologi">Gastroenterologi</option>
+                        <option value="pediatri">Pediatri</option>
+                        <option value="pulmonologi">Pulmonologi</option>
+                    </select>
+                    <x-input-error :messages="$errors->get('spesialisasi')" class="mt-2" />
+                </div>
             </div>
 
             <!-- Submit Button -->
@@ -121,6 +147,19 @@
     </section>
 
     <script>
+        const roleInput = document.getElementById('role');
+        const dokterDetails = document.getElementById('dokterDetails');
+        const jenisDokter = document.getElementById('jenis_dokter');
+        const spesialisasiField = document.getElementById('spesialisasiField');
+
+        roleInput.addEventListener('change', function () {
+            dokterDetails.classList.toggle('hidden', roleInput.value !== 'dokter');
+        });
+
+        jenisDokter.addEventListener('change', function () {
+            spesialisasiField.classList.toggle('hidden', jenisDokter.value !== 'spesialis');
+        });
+
         document.getElementById("registerForm").addEventListener("submit", function(event) {
             var button = document.getElementById("registerForm");
             button.disabled = true;

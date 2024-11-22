@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Obat;
+use App\Models\LogObat;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 
@@ -35,6 +36,15 @@ class ObatController extends Controller
 
         if ($request->has('search') && $request->search != '') {
             $query->where('nama_obat', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('sort_by') && $request->sort_by != '') {
+            $validSortColumns = ['nama_obat', 'stok', 'kedaluwarsa'];
+            $sortBy = in_array($request->sort_by, $validSortColumns) ? $request->sort_by : 'nama_obat';
+    
+            $sortOrder = $request->has('sort_order') && $request->sort_order === 'desc' ? 'desc' : 'asc';
+    
+            $query->orderBy($sortBy, $sortOrder);
         }
 
         $daftarObat = $query->get();
@@ -130,6 +140,16 @@ class ObatController extends Controller
             $validatedData['gambar_obat'] = $newFileName;
         }
 
+        if ($validatedData['stok'] != $obat->stok) {
+            $jumlahPerubahan = $validatedData['stok'] - $obat->stok;
+            LogObat::create([
+                'obat_id' => $obat->id,
+                'status' => $jumlahPerubahan > 0 ? 'terisi' : 'terjual',
+                'jumlah' => abs($jumlahPerubahan),
+                'tanggal_log' => now(),
+            ]);
+        }
+
         $obat->update($validatedData);
 
         return redirect()
@@ -144,6 +164,47 @@ class ObatController extends Controller
         $obat->delete();
 
         return redirect()->route('admin.daftarObat')->with('status', 'Obat berhasil dihapus.');
+    }
+
+    public function logObat(Request $request)
+    {
+        $query = LogObat::query();
+
+        if ($request->filled('search')) {
+            $query->whereHas('obat', function ($q) use ($request) {
+                $q->where('nama_obat', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('tanggal_awal')) {
+            $tanggalAwal = Carbon::parse($request->tanggal_awal)->startOfDay();
+            $query->where('tanggal_log', '>=', $tanggalAwal);
+        }
+
+        if ($request->filled('tanggal_akhir')) {
+            $tanggalAkhir = Carbon::parse($request->tanggal_akhir)->endOfDay();
+            $query->where('tanggal_log', '<=', $tanggalAkhir);
+        }
+
+        if ($request->filled('sort_by')) {
+            $sortBy = $request->sort_by;
+            $sortOrder = $request->sort_order ?: 'desc';
+            
+            if ($sortBy == 'nama_obat') {
+                $query->join('obat', 'log_obat.obat_id', '=', 'obat.id')
+                    ->orderBy('obat.nama_obat', $sortOrder);
+            } else {
+                $query->orderBy($sortBy, $sortOrder);
+            }
+        }
+
+        $logObat = $query->with('obat')->get();
+
+        return view('admin.logObat', compact('logObat'));
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Dokter;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -76,6 +77,8 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:127', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:admin,dokter,pasien'],
+            'jenis_dokter' => 'nullable|required_if:role,dokter|in:umum,spesialis',
+            'spesialisasi' => 'nullable|required_if:jenis_dokter,spesialis|in:kardiologi,neurologi,gastroenterologi,pediatri,pulmonologi',
         ]);
 
         $user = User::create([
@@ -87,6 +90,14 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        if ($request->role === 'dokter') {
+            Dokter::create([
+                'dokter_id' => $user->id,
+                'jenis_dokter' => $request->jenis_dokter,
+                'spesialisasi' => $request->jenis_dokter === 'spesialis' ? $request->spesialisasi : null,
+            ]);
+        }
 
         event(new Registered($user));
 

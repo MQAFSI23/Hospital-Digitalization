@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Obat;
 use App\Models\Dokter;
+use App\Models\LogObat;
 use App\Models\Feedback;
 use App\Models\RekamMedis;
 use App\Models\JadwalTugas;
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->count(50)->create();
         Obat::factory()->count(20)->create();
+        LogObat::factory(20)->create();
         Dokter::factory()->count(20)->create();
         Feedback::factory()->count(20)->create();
         JadwalTugas::factory()->count(20)->create();

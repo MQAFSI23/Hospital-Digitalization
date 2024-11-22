@@ -26,7 +26,7 @@ class DokterFactory extends Factory
         // Jika jenis dokter adalah spesialis, tentukan spesialisasi
         $spesialisasi = null;
         if ($jenisDokter === 'spesialis') {
-            $specialties = ['Kardiologi', 'Bedah Umum', 'Ortopedi', 'Pediatri', 'Neurologi'];
+            $specialties = ['kardiologi', 'neurologi', 'gastroenterologi', 'pediatri', 'pulmonologi'];
             $spesialisasi = $this->faker->randomElement($specialties);
         }
 

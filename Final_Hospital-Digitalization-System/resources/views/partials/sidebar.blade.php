@@ -39,6 +39,11 @@
                         Daftar Obat
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.logObat') }}" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
+                        Log Obat
+                    </a>
+                </li>
             @elseif (auth()->user()->role === 'dokter')
                 <!-- Dokter Menu -->
                 <li>

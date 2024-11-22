@@ -13,18 +13,18 @@
         <!-- Filter Form -->
         <form action="{{ route('admin.daftarPengguna') }}" method="GET" class="mt-8">
             @csrf
-            <div class="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
 
                 <!-- Filter Nama -->
-                <div class="mb-4 sm:mb-0 flex-1">
+                <div>
                     <label for="search" class="block text-sm font-medium">Cari Nama Pengguna</label>
-                    <input type="text" name="search" id="search" value="{{ request('search') }}"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded"
-                        placeholder="Masukkan nama pengguna">
+                    <input type="text" name="search" id="search" value="{{ request('search') }}" 
+                        placeholder="Masukkan nama pengguna"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded">
                 </div>
 
                 <!-- Filter Peran -->
-                <div class="mb-4 sm:mb-0">
+                <div>
                     <label for="role" class="block text-sm font-medium">Peran</label>
                     <select name="role" id="role" class="mt-1 block w-full p-2 border border-gray-300 rounded">
                         <option value="">Semua Peran</option>
@@ -34,17 +34,43 @@
                     </select>
                 </div>
 
-                <!-- Filter Tanggal Registrasi -->
-                <div class="mb-4 sm:mb-0">
+                <!-- Filter Tanggal Dari -->
+                <div>
                     <label for="date_from" class="block text-sm font-medium">Tanggal Dari</label>
-                    <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                    <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}" 
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded">
                 </div>
 
-                <div class="mb-4 sm:mb-0">
+                <!-- Filter Tanggal Sampai -->
+                <div>
                     <label for="date_to" class="block text-sm font-medium">Tanggal Sampai</label>
-                    <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                    <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}" 
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded">
                 </div>
 
+                <!-- Sort By -->
+                <div>
+                    <label for="sort_by" class="block text-sm font-medium">Urutkan Berdasarkan</label>
+                    <select name="sort_by" id="sort_by" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                        <option value="">Pilih Urutan</option>
+                        <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>Nama Pengguna</option>
+                        <option value="role" {{ request('sort_by') == 'role' ? 'selected' : '' }}>Peran</option>
+                        <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Tanggal Registrasi</option>
+                    </select>
+                </div>
+
+                <!-- Sort Order -->
+                <div>
+                    <label for="sort_order" class="block text-sm font-medium">Arah Urutan</label>
+                    <select name="sort_order" id="sort_order" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                        <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Menaik</option>
+                        <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>Menurun</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end">
                 <button type="submit" class="bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
                     Filter
                 </button>
