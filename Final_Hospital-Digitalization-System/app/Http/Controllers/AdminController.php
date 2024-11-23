@@ -21,7 +21,7 @@ class AdminController extends Controller
         $jumlahPengguna = User::count();
         $jumlahPasienHariIni = PenjadwalanKonsultasi::whereDate('tanggal_konsultasi', Carbon::today())->count();
         $penggunaTerbaru = User::where('created_at', '>=', Carbon::now()->subMonth())->get();
-
+        $jumlahPenggunaTerbaru = User::where('created_at', '>=', Carbon::now()->subMonth())->count();
         $obats = Obat::where('status_kedaluwarsa', 'belum kedaluwarsa')
                     ->where('kedaluwarsa', '<', Carbon::today())
                     ->get();
@@ -31,7 +31,7 @@ class AdminController extends Controller
             $obat->save();
         }
     
-        return view('admin.dashboard', compact('dokterBertugas', 'jumlahPengguna', 'jumlahDokterBertugas', 'jumlahPasienHariIni', 'penggunaTerbaru'));
+        return view('admin.dashboard', compact('dokterBertugas', 'jumlahPengguna', 'jumlahDokterBertugas', 'jumlahPasienHariIni', 'penggunaTerbaru', 'jumlahPenggunaTerbaru'));
     }
 
     public function daftarPengguna(Request $request)
@@ -71,7 +71,7 @@ class AdminController extends Controller
     public function detailPengguna($id)
     {
         $user = User::findOrFail($id);
-        $dokter = Dokter::where('dokter_id', $id)->first();
+        $dokter = Dokter::with('jadwalTugas')->where('dokter_id', $id)->first();
 
         return view('admin.detailPengguna', compact('user', 'dokter'));
     }

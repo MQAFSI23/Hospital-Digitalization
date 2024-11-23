@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Dokter;
+use App\Models\JadwalTugas;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -77,6 +78,8 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:127', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:admin,dokter,pasien'],
+            'jadwal_tugas' => 'required_if:role,dokter|array',
+            'jadwal_tugas.*' => 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
             'jenis_dokter' => 'nullable|required_if:role,dokter|in:umum,spesialis',
             'spesialisasi' => 'nullable|required_if:jenis_dokter,spesialis|in:kardiologi,neurologi,gastroenterologi,pediatri,pulmonologi',
         ]);
@@ -92,11 +95,18 @@ class RegisteredUserController extends Controller
         ]);
 
         if ($request->role === 'dokter') {
-            Dokter::create([
+            $dokter = Dokter::create([
                 'dokter_id' => $user->id,
                 'jenis_dokter' => $request->jenis_dokter,
                 'spesialisasi' => $request->jenis_dokter === 'spesialis' ? $request->spesialisasi : null,
             ]);
+
+            foreach ($request->jadwal_tugas as $hari) {
+                JadwalTugas::create([
+                    'dokter_id' => $dokter->id,
+                    'hari_tugas' => $hari,
+                ]);
+            }
         }
 
         event(new Registered($user));

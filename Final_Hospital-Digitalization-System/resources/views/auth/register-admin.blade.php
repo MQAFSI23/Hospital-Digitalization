@@ -129,6 +129,21 @@
                     </select>
                     <x-input-error :messages="$errors->get('spesialisasi')" class="mt-2" />
                 </div>
+
+                <!-- Jadwal Tugas -->
+                <div id="jadwalTugas" class="hidden mt-6">
+                    <x-input-label for="jadwal_tugas" :value="__('Hari Tugas')" />
+                    <div>
+                        @foreach(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $hari)
+                            <label class="block">
+                                <input type="checkbox" name="jadwal_tugas[]" value="{{ $hari }}"
+                                    class="mr-2">
+                                {{ $hari }}
+                            </label>
+                        @endforeach
+                    </div>
+                    <x-input-error :messages="$errors->get('jadwal_tugas')" class="mt-2" />
+                </div>
             </div>
 
             <!-- Submit Button -->
@@ -150,10 +165,12 @@
         const roleInput = document.getElementById('role');
         const dokterDetails = document.getElementById('dokterDetails');
         const jenisDokter = document.getElementById('jenis_dokter');
+        const jadwalTugas = document.getElementById('jadwalTugas');
         const spesialisasiField = document.getElementById('spesialisasiField');
 
         roleInput.addEventListener('change', function () {
             dokterDetails.classList.toggle('hidden', roleInput.value !== 'dokter');
+            jadwalTugas.classList.toggle('hidden', roleInput.value !== 'dokter');
         });
 
         jenisDokter.addEventListener('change', function () {

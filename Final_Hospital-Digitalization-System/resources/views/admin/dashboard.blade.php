@@ -32,7 +32,7 @@
 
         <!-- Daftar Dokter Bertugas Hari Ini -->
         <div class="max-h-80 overflow-hidden bg-white p-6 rounded shadow-lg mt-8">
-            <h2 class="text-xl font-semibold text-gray-800">Dokter Bertugas Hari Ini</h2>
+            <h2 class="text-xl font-semibold text-gray-800">Dokter yang Bertugas Hari Ini</h2>
             <div class="overflow-y-auto overflow-x-auto max-h-60 mt-2">
                 <table class="min-w-full border-collapse table-fixed">
                     <thead class="bg-indigo-600 text-white sticky top-0 z-10">
@@ -41,7 +41,6 @@
                             <th class="py-2 px-4">Nama Dokter</th>
                             <th class="py-2 px-4">Jenis Dokter</th>
                             <th class="py-2 px-4">Spesialisasi</th>
-                            <th class="py-2 px-4">Jam Tugas</th>
                         </tr>
                     </thead>
                     <tbody class="text-center">
@@ -50,8 +49,7 @@
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 <td class="py-2 px-4">{{ $jadwal->dokter->user->name }}</td> <!-- Nama Dokter -->
                                 <td class="py-2 px-4">{{ ucfirst($jadwal->dokter->jenis_dokter) }}</td> <!-- Jenis Dokter -->
-                                <td class="py-2 px-4">{{ ucfirst($jadwal->dokter->spesialisasi) ?? '-' }}</td> <!-- Spesialisasi -->
-                                <td class="py-2 px-4">{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td> <!-- Jam Tugas -->
+                                <td class="py-2 px-4">{{ $jadwal->dokter->spesialisasi == true ? ucfirst($jadwal->dokter->spesialisasi) : '-' }}</td> <!-- Spesialisasi -->
                             </tr>
                         @endforeach
                     </tbody>
@@ -69,7 +67,7 @@
 
         <!-- Tabel Pengguna Terbaru -->
         <div class="max-h-80 overflow-hidden bg-white p-6 rounded shadow-lg mt-8">
-            <h2 class="text-xl font-semibold text-gray-800">Pengguna Terbaru (Sebulan Terakhir)</h2>
+            <h2 class="text-xl font-semibold text-gray-800">Pengguna Terbaru (Sebulan Terakhir): {{ $jumlahPenggunaTerbaru }}</h2>
             <div class="overflow-y-auto overflow-x-auto max-h-60 mt-2">
                 <table class="min-w-full border-collapse table-fixed">
                     <thead class="bg-indigo-600 text-white sticky top-0 z-10">
