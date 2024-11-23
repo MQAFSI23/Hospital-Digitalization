@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JadwalTugas;
 use App\Models\User;
+use App\Models\Dokter;
 use App\Models\PenjadwalanKonsultasi;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -70,8 +71,9 @@ class AdminController extends Controller
     public function detailPengguna($id)
     {
         $user = User::findOrFail($id);
+        $dokter = Dokter::where('dokter_id', $id)->first();
 
-        return view('admin.detailPengguna', compact('user'));
+        return view('admin.detailPengguna', compact('user', 'dokter'));
     }
 
     public function editPengguna($id)
@@ -89,15 +91,13 @@ class AdminController extends Controller
             'tanggal_lahir' => ['required', 'date'],
             'jenis_kelamin' => ['required', 'in:pria,wanita'],
             'username' => ['required', 'string', 'max:15', 'unique:users,username,' . $id, 'alpha_num'],
-            'role' => ['required', 'in:admin,dokter,pasien'],
         ]);
 
         if (
             $user->name === $validated['name'] &&
             $user->tanggal_lahir === $validated['tanggal_lahir'] &&
             $user->jenis_kelamin === $validated['jenis_kelamin'] &&
-            $user->username === $validated['username'] &&
-            $user->role === $validated['role']
+            $user->username === $validated['username']
         ) {
             return redirect()->route('admin.daftarPengguna')->with('nothing', 'Tidak ada perubahan yang dilakukan.');
         }

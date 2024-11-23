@@ -17,8 +17,19 @@
             @csrf
             @method('PUT')
 
-            <!-- Name -->
+            <!-- Username -->
             <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
+                <x-input-label for="username" :value="__('Username')" />
+                <input type="text" id="username" name="username" placeholder="Username"
+                    class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
+                    value="{{ old('username', $user->username) }}" required autocomplete="off">
+            </div>
+            @error('username')
+                <div class="text-red-500 mt-2">{{ $message }}</div>
+            @enderror
+
+            <!-- Name -->
+            <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
                 <x-input-label for="name" :value="__('Nama')" />
                 <input type="text" id="name" name="name" placeholder="Name"
                     class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
@@ -50,28 +61,6 @@
             @error('jenis_kelamin')
                 <div class="text-red-500 mt-2">{{ $message }}</div>
             @enderror
-
-            <!-- Username -->
-            <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
-                <x-input-label for="username" :value="__('Username')" />
-                <input type="text" id="username" name="username" placeholder="Username"
-                    class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
-                    value="{{ old('username', $user->username) }}" required autocomplete="off">
-            </div>
-            @error('username')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
-            @enderror
-
-            <!-- Role -->
-            <div class="mt-6">
-                <x-input-label for="role" :value="__('Role')" />
-                <select id="role" name="role" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500" required>
-                    <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="dokter" {{ old('role', $user->role) === 'dokter' ? 'selected' : '' }}>Dokter</option>
-                    <option value="pasien" {{ old('role', $user->role) === 'pasien' ? 'selected' : '' }}>Pasien</option>
-                </select>
-                <x-input-error :messages="$errors->get('role')" class="mt-2" />
-            </div>
 
             <!-- Submit Button -->
             <div class="flex items-center justify-between mt-8">

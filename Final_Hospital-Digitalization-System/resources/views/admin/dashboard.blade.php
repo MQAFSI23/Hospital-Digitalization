@@ -46,7 +46,7 @@
                     </thead>
                     <tbody class="text-center">
                         @foreach ($dokterBertugas as $index => $jadwal)
-                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }}">
+                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 <td class="py-2 px-4">{{ $jadwal->dokter->user->name }}</td> <!-- Nama Dokter -->
                                 <td class="py-2 px-4">{{ ucfirst($jadwal->dokter->jenis_dokter) }}</td> <!-- Jenis Dokter -->
@@ -83,7 +83,7 @@
                     </thead>
                     <tbody class="bg-white text-center">
                         @foreach ($penggunaTerbaru as $index => $user)
-                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }}">
+                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 <td class="py-2 px-4">{{ $user->name }}</td>
                                 <td class="py-2 px-4">{{ $user->email }}</td>

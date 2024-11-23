@@ -12,10 +12,11 @@ class LogObatFactory extends Factory
 
     public function definition()
     {
+        $obat = $this->faker->randomElement(Obat::all());
         return [
-            'obat_id' => Obat::inRandomOrder()->first()->id ?? Obat::factory(),
-            'status' => $this->faker->randomElement(['terisi', 'terjual']),
-            'jumlah' => $this->faker->numberBetween(1, 50),
+            'obat_id' => $obat->id,  // Mengambil ID obat yang baru saja dibuat
+            'status' => 'terisi',
+            'jumlah' => $obat->stok,  // Menentukan jumlah log berdasarkan stok obat
             'tanggal_log' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }

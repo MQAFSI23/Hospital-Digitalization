@@ -18,6 +18,6 @@ class TindakanMedis extends Model
 
     public function dokter()
     {
-        return $this->belongsTo(User::class, 'dokter_id');
+        return $this->belongsTo(Dokter::class, 'dokter_id');
     }
 }

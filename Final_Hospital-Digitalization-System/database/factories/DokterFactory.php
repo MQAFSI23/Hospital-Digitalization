@@ -20,6 +20,11 @@ class DokterFactory extends Factory
         // Ambil user yang berperan sebagai 'dokter'
         $dokterUser = User::where('role', 'dokter')->inRandomOrder()->first();
 
+        // Jika tidak ada user dengan role dokter, buat exception
+        if (!$dokterUser) {
+            throw new \Exception('Tidak ada pengguna dengan peran dokter ditemukan.');
+        }
+
         // Tentukan jenis dokter (umum atau spesialis)
         $jenisDokter = $this->faker->randomElement(['umum', 'spesialis']);
 
@@ -30,10 +35,16 @@ class DokterFactory extends Factory
             $spesialisasi = $this->faker->randomElement($specialties);
         }
 
+        // Pastikan spesialisasi diberikan jika jenis dokter adalah spesialis
+        if ($jenisDokter === 'spesialis' && !$spesialisasi) {
+            throw new \Exception('Spesialisasi wajib diberikan untuk dokter spesialis.');
+        }
+
         return [
-            'dokter_id' => $dokterUser->id,
+            'dokter_id' => $dokterUser->id,  // Mengambil ID user yang memiliki peran 'dokter'
             'jenis_dokter' => $jenisDokter,
             'spesialisasi' => $spesialisasi,
         ];
     }
+
 }

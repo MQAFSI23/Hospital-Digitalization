@@ -25,6 +25,20 @@
                         <h3 class="font-semibold text-gray-600 text-sm md:text-base w-1/3">{{ $label }}</h3>
                         <p class="text-gray-800 text-base md:text-lg w-2/3 text-right">{{ $value }}</p>
                     </div>
+
+                    <!-- Tambahkan Jenis Dokter dan Spesialisasi setelah Peran -->
+                    @if ($label === 'Peran' && $user->role === 'dokter')
+                        <div class="flex justify-between items-center border-b border-gray-200 py-2">
+                            <h3 class="font-semibold text-gray-600 text-sm md:text-base w-1/3">Jenis Dokter</h3>
+                            <p class="text-gray-800 text-base md:text-lg w-2/3 text-right">{{ ucfirst($dokter->jenis_dokter) ?? 'Belum diisi' }}</p>
+                        </div>
+                        @if ($dokter->jenis_dokter === 'spesialis')
+                            <div class="flex justify-between items-center border-b border-gray-200 py-2">
+                                <h3 class="font-semibold text-gray-600 text-sm md:text-base w-1/3">Spesialisasi</h3>
+                                <p class="text-gray-800 text-base md:text-lg w-2/3 text-right">{{ ucfirst($dokter->spesialisasi) ?? 'Belum diisi' }}</p>
+                            </div>
+                        @endif
+                    @endif
                 @endforeach
             </div>
 

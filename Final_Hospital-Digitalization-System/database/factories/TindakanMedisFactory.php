@@ -27,8 +27,8 @@ class TindakanMedisFactory extends Factory
             'pasien_id' => $this->faker->randomElement($pasienId),
             'dokter_id' => $this->faker->randomElement($dokterId),
             'deskripsi' => 'Pemeriksaan kesehatan rutin',
-            'tanggal' => Carbon::today()->subDays(rand(1, 30)),
-            'notifikasi' => rand(0, 3),
+            'tanggal' => Carbon::today()->subDays(rand(0, 20))->addDays(rand(0, 10)),
+            'notifikasi' => rand(0, 1),
         ];
     }
 }

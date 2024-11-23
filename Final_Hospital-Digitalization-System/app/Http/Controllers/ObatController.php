@@ -93,6 +93,15 @@ class ObatController extends Controller
 
         $obat->save();
 
+        if ($obat->stok > 0) {
+            LogObat::create([
+                'obat_id' => $obat->id,
+                'status' => 'terisi',
+                'jumlah' => $obat->stok,
+                'tanggal_log' => now(),
+            ]);
+        }
+
         return redirect()->route('admin.daftarObat')->with('status', 'Obat berhasil didaftarkan.');
     }
 

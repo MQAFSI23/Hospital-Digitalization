@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Obat;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class ObatFactory extends Factory
@@ -20,7 +19,7 @@ class ObatFactory extends Factory
             'nama_obat' => $this->faker->unique()->word,
             'deskripsi' => $this->faker->sentence,
             'tipe_obat' => $this->faker->randomElement(['keras', 'biasa']),
-            'stok' => $this->faker->numberBetween(10, 200),
+            'stok' => $this->faker->numberBetween(10, 200),  // Menentukan stok obat
             'gambar_obat' => null,
             'kedaluwarsa' => $tanggalKedaluwarsa->format('Y-m-d'),
             'status_kedaluwarsa' => $statusKedaluwarsa,

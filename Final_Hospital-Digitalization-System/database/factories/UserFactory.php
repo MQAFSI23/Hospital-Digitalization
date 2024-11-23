@@ -16,35 +16,35 @@ class UserFactory extends Factory
      * @return array
      */
     public function definition()
-    {
+    {   
+        $username = $this->faker->unique()->userName;
+        $name = $this->faker->name;
+        $role = $this->faker->randomElement(['dokter', 'pasien']);
+
+        if (strpos($username, '.') !== false) {
+            $username = preg_replace('/\.(?=\S)/', '', $username);
+        }
+
+        if ($role === 'dokter') {
+            if (strpos($name, 'Prof.') !== false) {
+                $name = preg_replace('/^Prof\.\s*/', '', $name);
+                $name = 'Prof. Dr. dr. ' . $name;
+            } elseif (strpos($name, 'Dr.') !== false) {
+                $name = preg_replace('/^Dr\.\s*/', '', $name);
+                $name = 'Dr. dr. ' . $name;
+            } else {
+                $name = 'dr. ' . $name;
+            }
+        }
+
         return [
-            'name' => $this->faker->name,
-            'username' => $this->faker->unique()->userName,
+            'name' => $name,
+            'username' => $username,
             'email' => $this->faker->unique()->safeEmail,
             'password' => Hash::make('password'),
-            'role' => $this->faker->randomElement(['dokter', 'pasien']),
+            'role' => $role,
             'tanggal_lahir' => $this->faker->date(),
             'jenis_kelamin' => $this->faker->randomElement(['pria', 'wanita']),
         ];
-    }
-
-    /**
-     * State for role Dokter
-     */
-    public function dokter()
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => 'dokter',
-        ]);
-    }
-
-    /**
-     * State for role Pasien
-     */
-    public function pasien()
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => 'pasien',
-        ]);
     }
 }
