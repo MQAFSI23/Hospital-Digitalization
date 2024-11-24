@@ -43,7 +43,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'password' => Hash::make('password'),
             'role' => $role,
-            'tanggal_lahir' => $this->faker->date(),
+            'tanggal_lahir' => $this->faker->dateTimeBetween('-80 years', '-20 years')->format('Y-m-d'),
             'jenis_kelamin' => $this->faker->randomElement(['pria', 'wanita']),
         ];
     }

@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
             ]);
 
         User::factory() // Random Tester
-            ->count(5)
+            ->count(30)
             ->create()
             ->each(function ($user) {
                 $user->password = Hash::make('tester123');
@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
             });
 
         User::factory() // Random
-            ->count(50)
+            ->count(10)
             ->create()
             ->each(function ($user) {
 
@@ -106,7 +106,9 @@ class DatabaseSeeder extends Seeder
         Feedback::factory()->count(20)->create();
         RekamMedis::factory()
             ->count(15)
-            ->hasAttached(Obat::inRandomOrder()->limit(3)->get())
+            ->hasAttached(
+                Obat::all()->random(3)
+            )
             ->create();
         PenjadwalanKonsultasi::factory()->count(15)->create();
     }

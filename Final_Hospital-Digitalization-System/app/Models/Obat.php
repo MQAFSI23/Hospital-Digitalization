@@ -34,7 +34,8 @@ class Obat extends Model
      */
     public function rekamMedis()
     {
-        return $this->belongsToMany(RekamMedis::class, 'rekam_medis_obat', 'obat_id', 'rekam_medis_id');
+        return $this->belongsToMany(RekamMedis::class, 'rekam_medis_obat', 'obat_id', 'rekam_medis_id')
+                    ->withTimestamps();
     }
 
     public function logObat()

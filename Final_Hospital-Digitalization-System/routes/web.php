@@ -90,6 +90,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/dokter/detail-pasien/{id}', [DokterController::class, 'detailPasien'])
             ->name('dokter.detailPasien');
+
+        Route::get('/dokter/rekam-medis/{id}', [DokterController::class, 'detailRekamMedis'])
+            ->name('dokter.detailRekamMedis');
     });
 
     // Pasien Routes

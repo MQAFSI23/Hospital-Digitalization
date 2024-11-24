@@ -20,6 +20,7 @@ class RekamMedisFactory extends Factory
             'pasien_id' => User::where('role', 'pasien')->inRandomOrder()->first()->id,
             'dokter_id' => $dokter,
             'tindakan' => $this->faker->sentence(),
+            'diagnosa' => $this->faker->sentence(),
             'tanggal_berobat' => $this->faker->date(),
             'created_by' => $dokter,
         ];

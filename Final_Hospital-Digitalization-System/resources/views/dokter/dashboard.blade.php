@@ -29,9 +29,72 @@
         </div>
     </div>
 
+    <!-- Janji Konsultasi yang telah dikonfirmasi-->
+    <div class="mt-8 bg-white p-6 rounded shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-800">Janji Konsultasi yang Telah Dikonfirmasi: {{ $totalJanji }}</h2>
+        <div class="overflow-y-auto overflow-x-auto max-h-60 mt-4">
+            <table class="min-w-full border-collapse table-fixed">
+                <thead class="bg-indigo-600 text-white">
+                    <tr>
+                        <th class="py-2 px-4 w-16">No</th>
+                        <th class="py-2 px-4">Nama Pasien</th>
+                        <th class="py-2 px-4">Tanggal Konsultasi</th>
+                        <th class="py-2 px-4">Selesai</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($pasienKonsul as $index => $penjadwalan)
+                        <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center">
+                            <td class="py-2 px-4">{{ $index + 1 }}</td>
+                            <td class="py-2 px-4">{{ $penjadwalan->pasien->name }}</td>
+                            <td class="py-2 px-4">{{ $penjadwalan->tanggal_konsultasi }}</td>
+                            <td class="py-2 px-4">{{ $penjadwalan->konfirmasi }}</td>
+                            <td class="py-2 px-4">{{ ucfirst($penjadwalan->selesai) }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada pasien yang telah dikonfirmasi.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Janji Konsultasi yang belum dikonfirmasi-->
+    <div class="mt-8 bg-white p-6 rounded shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-800">Janji Konsultasi yang Belum Dikonfirmasi: {{ $totalMintaJanji }}</h2>
+        <div class="overflow-y-auto overflow-x-auto max-h-60 mt-4">
+            <table class="min-w-full border-collapse table-fixed">
+                <thead class="bg-indigo-600 text-white">
+                    <tr>
+                        <th class="py-2 px-4 w-16">No</th>
+                        <th class="py-2 px-4">Nama Pasien</th>
+                        <th class="py-2 px-4">Tanggal Konsultasi</th>
+                        <th class="py-2 px-4">Konfirmasi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($pasienMintaKonsul as $index => $penjadwalan)
+                        <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center">
+                            <td class="py-2 px-4">{{ $index + 1 }}</td>
+                            <td class="py-2 px-4">{{ $penjadwalan->pasien->name }}</td>
+                            <td class="py-2 px-4">{{ $penjadwalan->tanggal_konsultasi }}</td>
+                            <td class="py-2 px-4">{{ ucfirst($penjadwalan->konfirmasi) }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada pasien yang meminta konsultasi.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <!-- 5 Pasien Terbaru -->
     <div class="mt-8 bg-white p-6 rounded shadow-lg">
-        <h2 class="text-xl font-semibold text-gray-800">Lima Terbaru Pasien yang Telah Diperiksa</h2>
+        <h2 class="text-xl font-semibold text-gray-800">Lima Pasien Terbaru yang Telah Diperiksa</h2>
         <div class="overflow-y-auto overflow-x-auto max-h-60 mt-4">
             <table class="min-w-full border-collapse table-fixed">
                 <thead class="bg-indigo-600 text-white">
@@ -44,7 +107,8 @@
                 </thead>
                 <tbody>
                     @forelse ($pasienSelesai as $index => $rekamMedis)
-                        <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center">
+                        <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center cursor-pointer"
+                            onclick="window.location='{{ route('dokter.detailPasien', $rekamMedis->pasien->id) }}';">
                             <td class="py-2 px-4">{{ $index + 1 }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->pasien->name }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->tanggal_berobat }}</td>
@@ -60,35 +124,5 @@
         </div>
     </div>
 
-    <!-- Janji Konsultasi -->
-    <div class="mt-8 bg-white p-6 rounded shadow-lg">
-        <h2 class="text-xl font-semibold text-gray-800">Janji Konsultasi: {{ $totalJanji }}</h2>
-        <div class="overflow-y-auto overflow-x-auto max-h-60 mt-4">
-            <table class="min-w-full border-collapse table-fixed">
-                <thead class="bg-indigo-600 text-white">
-                    <tr>
-                        <th class="py-2 px-4 w-16">No</th>
-                        <th class="py-2 px-4">Nama Pasien</th>
-                        <th class="py-2 px-4">Tanggal Konsultasi</th>
-                        <th class="py-2 px-4">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($pasienKonsul as $index => $penjadwalan)
-                        <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center">
-                            <td class="py-2 px-4">{{ $index + 1 }}</td>
-                            <td class="py-2 px-4">{{ $penjadwalan->pasien->name }}</td>
-                            <td class="py-2 px-4">{{ $penjadwalan->tanggal_konsultasi }}</td>
-                            <td class="py-2 px-4">{{ ucfirst($penjadwalan->selesai) }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada rekam medis pasien yang akan konsultasi.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
 @endsection
