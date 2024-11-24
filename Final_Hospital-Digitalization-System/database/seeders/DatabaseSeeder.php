@@ -109,6 +109,5 @@ class DatabaseSeeder extends Seeder
             ->hasAttached(Obat::inRandomOrder()->limit(3)->get())
             ->create();
         PenjadwalanKonsultasi::factory()->count(15)->create();
-        TindakanMedis::factory()->count(20)->create();
     }
 }

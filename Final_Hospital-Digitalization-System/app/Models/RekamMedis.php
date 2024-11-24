@@ -15,6 +15,7 @@ class RekamMedis extends Model
         'obat_id',
         'tindakan',
         'tanggal_berobat',
+        'created_by',
     ];
 
     /**
@@ -22,7 +23,7 @@ class RekamMedis extends Model
      */
     public function pasien()
     {
-        return $this->belongsTo(User::class, 'pasien_id');
+        return $this->belongsTo(User::class, 'pasien_id', 'id');
     }
 
     /**

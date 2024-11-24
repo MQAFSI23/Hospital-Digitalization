@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('dokter_id')->constrained('dokter')->onDelete('cascade');
             $table->text('tindakan');
             $table->date('tanggal_berobat');
+            $table->foreignId('created_by')->constrained('dokter')->onDelete('cascade');
             $table->timestamps();
         });
     }

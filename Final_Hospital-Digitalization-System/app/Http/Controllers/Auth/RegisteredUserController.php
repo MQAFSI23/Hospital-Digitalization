@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:127'],
-            'tanggal_lahir' => ['required', 'date'],
+            'tanggal_lahir' => ['required', 'date', 'before_or_equal:today'],
             'jenis_kelamin' => ['required', 'in:pria,wanita'],
             'username' => ['required', 'string', 'max:15', 'unique:users,username', 'alpha_num'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:127', 'unique:users,email'],
@@ -72,7 +72,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:127'],
-            'tanggal_lahir' => ['required', 'date'],
+            'tanggal_lahir' => ['required', 'date', 'before_or_equal:today'],
             'jenis_kelamin' => ['required', 'in:pria,wanita'],
             'username' => ['required', 'string', 'max:15', 'unique:users,username', 'alpha_num'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:127', 'unique:users,email'],
@@ -82,7 +82,15 @@ class RegisteredUserController extends Controller
             'jadwal_tugas.*' => 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
             'jenis_dokter' => 'nullable|required_if:role,dokter|in:umum,spesialis',
             'spesialisasi' => 'nullable|required_if:jenis_dokter,spesialis|in:kardiologi,neurologi,gastroenterologi,pediatri,pulmonologi',
+            'admin_password' => 'required',
         ]);
+
+        $admin = Auth::user();
+
+        if (!Hash::check($request->admin_password, $admin->password)) {
+
+            return redirect()->route('admin.dashboard')->with('error', 'Password admin tidak valid. Pengguna gagal didaftar.');
+        }
 
         $user = User::create([
             'name' => $request->name,

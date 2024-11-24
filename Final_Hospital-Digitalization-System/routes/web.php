@@ -84,6 +84,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:dokter')->group(function () {
         Route::get('/dokter/dashboard', [DokterController::class, 'dashboard'])
             ->name('dokter.dashboard');
+            
+        Route::get('/dokter/daftar-pasien', [DokterController::class, 'daftarPasien'])
+            ->name('dokter.daftarPasien');
+
+        Route::get('/dokter/detail-pasien/{id}', [DokterController::class, 'detailPasien'])
+            ->name('dokter.detailPasien');
     });
 
     // Pasien Routes

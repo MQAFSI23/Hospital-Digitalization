@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 
 @section('content')
-    <section class="flex w-full max-w-full sm:w-[24rem] md:w-[30rem] lg:w-[40rem] px-4 flex-col space-y-10">
+    <section class="flex flex-col w-full max-w-lg px-8 sm:px-8 lg:px-8 space-y-10">
         <!-- Judul Halaman -->
         <div class="text-center text-4xl font-medium">Edit Obat</div>
 
@@ -25,7 +25,7 @@
                     value="{{ old('nama_obat', $obat->nama_obat) }}" required>
             </div>
             @error('nama_obat')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Deskripsi -->
@@ -35,7 +35,7 @@
                     class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none" required>{{ old('deskripsi', $obat->deskripsi) }}</textarea>
             </div>
             @error('deskripsi')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Tipe Obat -->
@@ -48,7 +48,7 @@
                 </select>
             </div>
             @error('tipe_obat')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Stok -->
@@ -59,7 +59,7 @@
                     value="{{ old('stok', $obat->stok) }}" required min="0">
             </div>
             @error('stok')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Gambar Obat -->
@@ -69,7 +69,7 @@
                     class="w-full border-none bg-transparent outline-none focus:outline-none">
             </div>
             @error('gambar_obat')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Kedaluwarsa -->
@@ -80,7 +80,17 @@
                     value="{{ old('kedaluwarsa', $obat->kedaluwarsa) }}" required>
             </div>
             @error('kedaluwarsa')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+            @enderror
+
+            <!-- Password Admin untuk Konfirmasi -->
+            <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
+                <x-input-label for="admin_password" :value="__('Password Admin')" />
+                <input type="password" id="admin_password" name="admin_password" placeholder="Masukkan Password Admin"
+                    class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none" required>
+            </div>
+            @error('admin_password')
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Submit Button -->
@@ -91,7 +101,7 @@
                 </a>
 
                 <!-- Save Changes -->
-                <button type="submit" id="editForm" class="transform rounded-sm bg-indigo-500 py-2 px-6 font-bold duration-300 hover:bg-indigo-700">
+                <button type="submit" id="editForm" class="transform rounded-sm bg-indigo-500 py-2 px-2 font-bold duration-300 hover:bg-indigo-700">
                     Simpan Perubahan
                 </button>
             </div>

@@ -93,6 +93,10 @@
                 <div class="p-4 mb-4 text-sm text-blue-500 bg-blue-100 rounded" role="alert">
                     {{ session('nothing') }}
                 </div>
+            @elseif (session('error'))
+                <div class="p-4 mb-4 text-sm text-red-500 bg-red-100 rounded" role="alert">
+                    {{ session('error') }}
+                </div>
             @endif
         </div>
 
@@ -111,11 +115,15 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white text-center">
-                        @foreach ($daftarPengguna as $index => $user)
+                        @forelse ($daftarPengguna as $index => $user)
                             <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} cursor-pointer hover:bg-indigo-100 duration-300"
                                 onclick="window.location='{{ route('admin.detailPengguna', $user->id) }}';">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
-                                <td class="py-2 px-4">{{ $user->name }}</td>
+                                @if ($user->id === auth()->user()->id)
+                                    <td class="py-2 px-4">{{ $user->name }} (Anda)</td>
+                                @else
+                                    <td class="py-2 px-4">{{ $user->name }}</td>
+                                @endif
                                 <td class="py-2 px-4">{{ $user->email }}</td>
                                 <td class="py-2 px-4">{{ ucfirst($user->role) }}</td>
                                 <td class="py-2 px-4">
@@ -126,17 +134,58 @@
                                         Edit
                                     </a>
                                     
-                                    <form action="{{ route('admin.hapusPengguna', $user->id) }}" method="POST" class="inline-block"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna {{ $user->name }} ({{ $user->email }})?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded duration-300">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <x-danger-button
+                                        class="bg-red-500 hover:bg-red-700 rounded duration-300"
+                                        x-data=""
+                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion-{{ $user->id }}')"
+                                    >{{ __('Hapus') }}</x-danger-button>
+
+                                    <x-modal name="confirm-user-deletion-{{ $user->id }}" :show="$errors->userDeletion->isNotEmpty()" focusable>
+                                        <form method="post" action="{{ route('admin.hapusPengguna', $user->id) }}" class="p-6">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <h2 class="text-lg font-medium text-gray-900">
+                                                {{ __('Apakah Anda yakin ingin menghapus akun ini?') }}
+                                            </h2>
+
+                                            <p class="mt-1 text-sm text-gray-600">
+                                                {{ __('Setelah akun ini dihapus, semua data dan informasi terkait akan hilang secara permanen. Masukkan password Anda untuk mengonfirmasi penghapusan.') }}
+                                            </p>
+
+                                            <div class="mt-6">
+                                                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+
+                                                <x-text-input
+                                                    id="password"
+                                                    name="password"
+                                                    type="password"
+                                                    class="transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 w-3/4"
+                                                    placeholder="{{ __('Password Anda') }}"
+                                                    required
+                                                />
+
+                                                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                                            </div>
+
+                                            <div class="mt-6 flex justify-end">
+                                                <x-secondary-button x-on:click="$dispatch('close')" class="duration-300">
+                                                    {{ __('Batal') }}
+                                                </x-secondary-button>
+
+                                                <x-danger-button type="submit" class="ms-3 bg-red-500 hover:bg-red-700 rounded duration-300">
+                                                    {{ __('Hapus Akun') }}
+                                                </x-danger-button>
+                                            </div>
+                                        </form>
+                                    </x-modal>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada pengguna yang ditemukan.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Obat;
 use App\Models\LogObat;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class ObatController extends Controller
@@ -71,8 +73,16 @@ class ObatController extends Controller
             'tipe_obat' => 'required|in:keras,biasa',
             'stok' => 'required|integer|min:0',
             'gambar_obat' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'kedaluwarsa' => 'required|date|after_or_equal:today',
+            'kedaluwarsa' => 'required|date|after_or_equal:'. now()->addMonths(3)->format('d-m-Y'),
+            'admin_password' => 'required',
         ]);
+
+        $admin = Auth::user();
+
+        if (!Hash::check($request->admin_password, $admin->password)) {
+
+            return redirect()->route('admin.daftarObat')->with('error', 'Password admin tidak valid. Obat gagal didaftar.');
+        }
 
         $obat = new Obat();
         $obat->nama_obat = $validatedData['nama_obat'];
@@ -125,8 +135,16 @@ class ObatController extends Controller
             'tipe_obat' => 'required|in:keras,biasa',
             'stok' => 'required|integer|min:0',
             'gambar_obat' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'kedaluwarsa' => 'required|date|after_or_equal:today',
+            'kedaluwarsa' => 'required|date|after_or_equal:'. now()->addMonths(3)->format('d-m-Y'),
+            'admin_password' => 'required',
         ]);
+
+        $admin = Auth::user();
+
+        if (!Hash::check($request->admin_password, $admin->password)) {
+
+            return redirect()->route('admin.daftarObat')->with('error', 'Password admin tidak valid. Tidak ada perubahan yang dilakukan.');
+        }
 
         if (
             $validatedData['nama_obat'] === $obat->nama_obat &&
@@ -163,12 +181,20 @@ class ObatController extends Controller
 
         return redirect()
             ->route('admin.daftarObat')
-            ->with('status', 'Obat berhasil diperbarui.');
+            ->with('status', 'Data obat berhasil diperbarui.');
     }
 
-    public function hapusObat($id)
+    public function hapusObat(Request $request, $id)
     {
+        $request->validate([
+            'password' => 'required',
+        ]);
+
         $obat = Obat::findOrFail($id);
+
+        if (!Hash::check($request->password, auth()->user()->password)) {
+            return redirect()->route('admin.daftarObat')->with('error', 'Password admin tidak valid. Obat gagal dihapus.');
+        }
 
         $obat->delete();
 
@@ -201,7 +227,7 @@ class ObatController extends Controller
 
         if ($request->filled('sort_by')) {
             $sortBy = $request->sort_by;
-            $sortOrder = $request->sort_order ?: 'desc';
+            $sortOrder = $request->sort_order ? : 'desc';
             
             if ($sortBy == 'nama_obat') {
                 $query->join('obat', 'log_obat.obat_id', '=', 'obat.id')

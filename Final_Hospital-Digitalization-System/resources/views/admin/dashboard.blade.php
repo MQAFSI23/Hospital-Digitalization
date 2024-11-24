@@ -5,12 +5,16 @@
 @section('content')
     <div class="py-10">
         <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-        <p class="mt-2 text-gray-600">Halo, {{ auth()->user()->name }}. Selamat datang di halaman Admin Dashboard!</p>
+        <p class="mt-2 text-gray-600">Halo, {{ auth()->user()->name }}👋</p>
 
         <!-- Menampilkan pesan sukses jika ada -->
         @if (session('success'))
             <div class="p-4 mt-8 text-sm text-green-500 bg-green-100 rounded" role="alert">
                 {{ session('success') }}
+            </div>
+        @elseif (session('error'))
+            <div class="p-4 mt-8 text-sm text-red-500 bg-red-100 rounded" role="alert">
+                {{ session('error') }}
             </div>
         @endif
 
@@ -44,14 +48,18 @@
                         </tr>
                     </thead>
                     <tbody class="text-center">
-                        @foreach ($dokterBertugas as $index => $jadwal)
+                        @forelse ($dokterBertugas as $index => $jadwal)
                             <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 <td class="py-2 px-4">{{ $jadwal->dokter->user->name }}</td> <!-- Nama Dokter -->
                                 <td class="py-2 px-4">{{ ucfirst($jadwal->dokter->jenis_dokter) }}</td> <!-- Jenis Dokter -->
                                 <td class="py-2 px-4">{{ $jadwal->dokter->spesialisasi == true ? ucfirst($jadwal->dokter->spesialisasi) : '-' }}</td> <!-- Spesialisasi -->
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada dokter yang bertugas hari ini.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -61,13 +69,13 @@
         <div class="mt-8 flex justify-center sm:justify-start">
             <a href="{{ route('register-admin') }}" 
                 class="w-full sm:w-auto max-w-xs sm:max-w-none bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-center">
-                Register User Baru
+                Register Pengguna Baru
             </a>
         </div>
 
         <!-- Tabel Pengguna Terbaru -->
         <div class="max-h-80 overflow-hidden bg-white p-6 rounded shadow-lg mt-8">
-            <h2 class="text-xl font-semibold text-gray-800">Pengguna Terbaru (Sebulan Terakhir): {{ $jumlahPenggunaTerbaru }}</h2>
+            <h2 class="text-xl font-semibold text-gray-800">Pengguna Baru (Sebulan Terakhir): {{ $jumlahPenggunaTerbaru }}</h2>
             <div class="overflow-y-auto overflow-x-auto max-h-60 mt-2">
                 <table class="min-w-full border-collapse table-fixed">
                     <thead class="bg-indigo-600 text-white sticky top-0 z-10">
@@ -80,15 +88,23 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white text-center">
-                        @foreach ($penggunaTerbaru as $index => $user)
+                        @forelse ($penggunaTerbaru as $index => $user)
                             <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
-                                <td class="py-2 px-4">{{ $user->name }}</td>
+                                @if ($user->id === auth()->user()->id)
+                                    <td class="py-2 px-4">{{ $user->name }} (Anda)</td>
+                                @else
+                                    <td class="py-2 px-4">{{ $user->name }}</td>
+                                @endif
                                 <td class="py-2 px-4">{{ $user->email }}</td>
                                 <td class="py-2 px-4">{{ ucfirst($user->role) }}</td>
                                 <td class="py-2 px-4">{{ $user->created_at->format('d-m-Y') }}</td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada pengguna baru dalam sebulan terakhir.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

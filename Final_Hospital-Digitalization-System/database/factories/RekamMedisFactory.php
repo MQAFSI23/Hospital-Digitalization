@@ -14,11 +14,14 @@ class RekamMedisFactory extends Factory
 
     public function definition()
     {
+        $dokter = Dokter::inRandomOrder()->first()->id;
+        
         return [
             'pasien_id' => User::where('role', 'pasien')->inRandomOrder()->first()->id,
-            'dokter_id' => Dokter::inRandomOrder()->first()->id,
+            'dokter_id' => $dokter,
             'tindakan' => $this->faker->sentence(),
             'tanggal_berobat' => $this->faker->date(),
+            'created_by' => $dokter,
         ];
     }
 

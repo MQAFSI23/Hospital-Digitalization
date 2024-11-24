@@ -11,7 +11,7 @@
         <h1 class="text-3xl font-bold text-gray-800">Daftar Obat</h1>
 
         <div class="mt-8 flex justify-center sm:justify-start">
-            <a href="{{ route('admin.registerObat') }}" class="w-full sm:w-auto max-w-xs sm:max-w-none bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+            <a href="{{ route('admin.registerObat') }}" class="w-full sm:w-auto max-w-xs sm:max-w-none bg-indigo-500 duration-300 hover:bg-indigo-700 text-center text-white font-bold py-2 px-4 rounded">
                 Register Obat Baru
             </a>
         </div>
@@ -67,7 +67,7 @@
             <!-- Submit Button -->
             <div class="flex justify-end">
                 <button type="submit" 
-                    class="bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded">
+                    class="bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
                     Filter
                 </button>
             </div>
@@ -89,6 +89,10 @@
                 <div class="p-4 mb-4 text-sm text-blue-500 bg-blue-100 rounded" role="alert">
                     {{ session('nothing') }}
                 </div>
+            @elseif (session('error'))
+                <div class="p-4 mb-4 text-sm text-red-500 bg-red-100 rounded" role="alert">
+                    {{ session('error') }}
+                </div>
             @endif
         </div>
 
@@ -107,7 +111,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white text-center">
-                        @foreach ($daftarObat as $index => $obat)
+                        @forelse ($daftarObat as $index => $obat)
                             <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} cursor-pointer hover:bg-indigo-100 duration-300" onclick="window.location='{{ route('admin.detailObat', $obat->id) }}';">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 <td class="py-2 px-4">{{ $obat->nama_obat }}</td>
@@ -121,16 +125,58 @@
                                         Edit
                                     </a>
                                     
-                                    <form action="{{ route('admin.hapusObat', $obat->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus obat {{ $obat->nama_obat }}?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded duration-300">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <x-danger-button
+                                        class="bg-red-500 hover:bg-red-700 rounded duration-300"
+                                        x-data=""
+                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-obat-deletion-{{ $obat->id }}')"
+                                    >{{ __('Hapus') }}</x-danger-button>
+
+                                    <x-modal name="confirm-obat-deletion-{{ $obat->id }}" :show="$errors->obatDeletion->isNotEmpty()" focusable>
+                                        <form method="post" action="{{ route('admin.hapusObat', $obat->id) }}" class="p-6">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <h2 class="text-lg font-medium text-gray-900">
+                                                {{ __('Apakah Anda yakin ingin menghapus obat ini?') }}
+                                            </h2>
+
+                                            <p class="mt-1 text-sm text-gray-600">
+                                                {{ __('Setelah obat ini dihapus, semua data dan informasi terkait akan hilang secara permanen. Masukkan password Anda untuk mengonfirmasi penghapusan.') }}
+                                            </p>
+
+                                            <div class="mt-6">
+                                                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+
+                                                <x-text-input
+                                                    id="password"
+                                                    name="password"
+                                                    type="password"
+                                                    class="transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 w-3/4"
+                                                    placeholder="{{ __('Password Anda') }}"
+                                                    required
+                                                />
+
+                                                <x-input-error :messages="$errors->obatDeletion->get('password')" class="mt-2" />
+                                            </div>
+
+                                            <div class="mt-6 flex justify-end">
+                                                <x-secondary-button x-on:click="$dispatch('close')" class="duration-300">
+                                                    {{ __('Batal') }}
+                                                </x-secondary-button>
+
+                                                <x-danger-button type="submit" class="ms-3 bg-red-500 hover:bg-red-700 rounded duration-300">
+                                                    {{ __('Hapus Akun') }}
+                                                </x-danger-button>
+                                            </div>
+                                        </form>
+                                    </x-modal>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada obat yang ditemukan.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

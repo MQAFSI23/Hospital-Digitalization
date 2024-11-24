@@ -24,7 +24,7 @@
                     value="{{ old('name') }}" required autofocus autocomplete="off">
             </div>
             @error('name')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Tanggal Lahir -->
@@ -35,7 +35,7 @@
                     value="{{ old('tanggal_lahir') }}" required>
             </div>
             @error('tanggal_lahir')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Jenis Kelamin -->
@@ -47,7 +47,7 @@
                 </select>
             </div>
             @error('jenis_kelamin')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Username -->
@@ -58,7 +58,7 @@
                     value="{{ old('username') }}" required autocomplete="off">
             </div>
             @error('username')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Email Address -->
@@ -69,7 +69,7 @@
                     value="{{ old('email') }}" required autocomplete="off">
             </div>
             @error('email')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Password -->
@@ -80,7 +80,7 @@
                     required autocomplete="off" onpaste="return false;">
             </div>
             @error('password')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Confirm Password -->
@@ -91,7 +91,7 @@
                     required autocomplete="off" onpaste="return false;">
             </div>
             @error('password_confirmation')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Submit Button -->
@@ -102,7 +102,7 @@
                 </a>
 
                 <!-- Register Button -->
-                <button type="submit" id="registerForm" class="transform rounded-sm bg-indigo-500 py-2 px-6 font-bold duration-300 hover:bg-indigo-700">
+                <button type="submit" id="registerForm" class="transform rounded-sm bg-indigo-500 py-2 px-2 font-bold duration-300 hover:bg-indigo-700">
                     Register
                 </button>
             </div>

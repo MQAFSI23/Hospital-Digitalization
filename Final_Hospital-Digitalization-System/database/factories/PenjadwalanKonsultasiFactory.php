@@ -25,7 +25,7 @@ class PenjadwalanKonsultasiFactory extends Factory
         return [
             'pasien_id' => $pasien->id,
             'dokter_id' => $dokter->id,
-            'tanggal_konsultasi' => Carbon::now()->addDays(rand(3, 10)),
+            'tanggal_konsultasi' => Carbon::now()->addDays(rand(3, 10))->toDateString(),
         ];
     }
 }

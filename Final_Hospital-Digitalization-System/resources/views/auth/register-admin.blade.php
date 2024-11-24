@@ -3,7 +3,7 @@
 @section('content')
     <section class="flex flex-col w-full max-w-lg px-8 sm:px-8 lg:px-8 space-y-10">
         <!-- Judul Halaman -->
-        <div class="text-center text-4xl font-medium">Register Admin</div>
+        <div class="text-center text-4xl font-medium mt-4">Register Admin</div>
 
         <!-- Session Status -->
         @if (session('status'))
@@ -24,7 +24,7 @@
                     value="{{ old('name') }}" required autofocus autocomplete="off">
             </div>
             @error('name')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Tanggal Lahir -->
@@ -35,7 +35,7 @@
                     value="{{ old('tanggal_lahir') }}" required>
             </div>
             @error('tanggal_lahir')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Jenis Kelamin -->
@@ -47,7 +47,7 @@
                 </select>
             </div>
             @error('jenis_kelamin')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Username -->
@@ -58,7 +58,7 @@
                     value="{{ old('username') }}" required autocomplete="off">
             </div>
             @error('username')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Email Address -->
@@ -69,7 +69,7 @@
                     value="{{ old('email') }}" required autocomplete="off">
             </div>
             @error('email')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Password -->
@@ -80,7 +80,7 @@
                     required autocomplete="off" onpaste="return false;">
             </div>
             @error('password')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Confirm Password -->
@@ -91,7 +91,7 @@
                     required autocomplete="off" onpaste="return false;">
             </div>
             @error('password_confirmation')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Role Selection -->
@@ -102,11 +102,11 @@
                     <option value="dokter" {{ old('role') === 'dokter' ? 'selected' : '' }}>Dokter</option>
                     <option value="pasien" {{ old('role') === 'pasien' ? 'selected' : '' }}>Pasien</option>
                 </select>
-                <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                <x-input-error :messages="$errors->get('role')" class="text-red-600 mt-2" />
             </div>
 
             <!-- Additional Inputs for Dokter -->
-            <div id="dokterDetails" class="hidden mt-6">
+            <div id="dokterDetails" class="hidden mt-6 text-lg">
                 <!-- Jenis Dokter -->
                 <div class="mt-6">
                     <x-input-label for="jenis_dokter" :value="__('Jenis Dokter')" />
@@ -114,7 +114,7 @@
                         <option value="umum">Umum</option>
                         <option value="spesialis">Spesialis</option>
                     </select>
-                    <x-input-error :messages="$errors->get('jenis_dokter')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('jenis_dokter')" class=" mt-2" />
                 </div>
 
                 <!-- Spesialisasi -->
@@ -127,7 +127,7 @@
                         <option value="pediatri">Pediatri</option>
                         <option value="pulmonologi">Pulmonologi</option>
                     </select>
-                    <x-input-error :messages="$errors->get('spesialisasi')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('spesialisasi')" class=" mt-2" />
                 </div>
 
                 <!-- Jadwal Tugas -->
@@ -142,19 +142,29 @@
                             </label>
                         @endforeach
                     </div>
-                    <x-input-error :messages="$errors->get('jadwal_tugas')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('jadwal_tugas')" class=" mt-2" />
                 </div>
             </div>
 
+            <!-- Password Admin untuk Konfirmasi -->
+            <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
+                <x-input-label for="admin_password" :value="__('Password Admin')" />
+                <input type="password" id="admin_password" name="admin_password" placeholder="Masukkan Password Admin"
+                    class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none" required>
+            </div>
+            @error('admin_password')
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+            @enderror
+
             <!-- Submit Button -->
-            <div class="flex items-center justify-between mt-8">
+            <div class="flex items-center justify-between mt-8 mb-4">
                 <!-- Back -->
                 <a class="text-lg font-medium text-indigo-500 hover:underline transition-all duration-300" href="{{ route('admin.dashboard') }}">
                     {{ __('Kembali') }}
                 </a>
 
                 <!-- Register Button -->
-                <button type="submit" id="registerForm" class="transform rounded-sm bg-indigo-500 py-2 px-6 font-bold duration-300 hover:bg-indigo-700">
+                <button type="submit" id="registerForm" class="transform rounded-sm bg-indigo-500 py-2 px-2 font-bold duration-300 hover:bg-indigo-700">
                     Register
                 </button>
             </div>
@@ -168,14 +178,28 @@
         const jadwalTugas = document.getElementById('jadwalTugas');
         const spesialisasiField = document.getElementById('spesialisasiField');
 
-        roleInput.addEventListener('change', function () {
-            dokterDetails.classList.toggle('hidden', roleInput.value !== 'dokter');
-            jadwalTugas.classList.toggle('hidden', roleInput.value !== 'dokter');
-        });
+        function updateVisibility() {
+            if (roleInput.value === 'dokter') {
+                dokterDetails.classList.remove('hidden');
+                jadwalTugas.classList.remove('hidden');
+                if (jenisDokter.value === 'spesialis') {
+                    spesialisasiField.classList.remove('hidden');
+                } else {
+                    spesialisasiField.classList.add('hidden');
+                }
+            } else {
+                dokterDetails.classList.add('hidden');
+                spesialisasiField.classList.add('hidden');
+            }
+        }
+
+        roleInput.addEventListener('change', updateVisibility);
 
         jenisDokter.addEventListener('change', function () {
             spesialisasiField.classList.toggle('hidden', jenisDokter.value !== 'spesialis');
         });
+
+        document.addEventListener('DOMContentLoaded', updateVisibility);
 
         document.getElementById("registerForm").addEventListener("submit", function(event) {
             var button = document.getElementById("registerForm");

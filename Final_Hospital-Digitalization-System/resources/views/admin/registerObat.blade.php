@@ -24,7 +24,7 @@
                     value="{{ old('nama_obat') }}" required>
             </div>
             @error('nama_obat')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Deskripsi -->
@@ -34,7 +34,7 @@
                     class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none" rows="4" required>{{ old('deskripsi') }}</textarea>
             </div>
             @error('deskripsi')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Tipe Obat -->
@@ -46,7 +46,7 @@
                 </select>
             </div>
             @error('tipe_obat')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Stok -->
@@ -57,7 +57,7 @@
                     value="{{ old('stok') }}" required>
             </div>
             @error('stok')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Gambar Obat -->
@@ -66,7 +66,7 @@
                 <input type="file" id="gambar_obat" name="gambar_obat" class="w-full bg-transparent border-b-2" />
             </div>
             @error('gambar_obat')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Tanggal Kedaluwarsa -->
@@ -77,7 +77,17 @@
                     value="{{ old('kedaluwarsa') }}" required>
             </div>
             @error('kedaluwarsa')
-                <div class="text-red-500 mt-2">{{ $message }}</div>
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+            @enderror
+
+            <!-- Password Admin untuk Konfirmasi -->
+            <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
+                <x-input-label for="admin_password" :value="__('Password Admin')" />
+                <input type="password" id="admin_password" name="admin_password" placeholder="Masukkan Password Admin"
+                    class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none" required>
+            </div>
+            @error('admin_password')
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
             <!-- Submit Button -->
@@ -88,7 +98,7 @@
                 </a>
 
                 <!-- Register Button -->
-                <button type="submit" id="registerForm" class="transform rounded-sm bg-indigo-500 py-2 px-6 font-bold duration-300 hover:bg-indigo-700">
+                <button type="submit" id="registerForm" class="transform rounded-sm bg-indigo-500 py-2 px-2 font-bold duration-300 hover:bg-indigo-700">
                     Register Obat
                 </button>
             </div>

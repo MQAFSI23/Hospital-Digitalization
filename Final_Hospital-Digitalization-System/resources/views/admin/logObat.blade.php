@@ -95,7 +95,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white text-center">
-                        @foreach ($logObat as $index => $log)
+                        @forelse ($logObat as $index => $log)
                             <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 duration-300">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 <td class="py-2 px-4">{{ $log->obat->nama_obat }}</td>
@@ -103,7 +103,11 @@
                                 <td class="py-2 px-4">{{ $log->jumlah }}</td>
                                 <td class="py-2 px-4">{{ Carbon::parse($log->tanggal_log)->format('d-m-Y H:i') }}</td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-2 text-left text-gray-500">Tidak ada log yang ditemukan.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

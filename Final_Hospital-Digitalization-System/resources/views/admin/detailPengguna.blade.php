@@ -66,16 +66,51 @@
                         class="bg-yellow-500 hover:bg-yellow-700 duration-300 text-white text-sm md:text-base font-medium py-2 px-4 md:px-6 rounded text-center">
                         Edit
                     </a>
-                    <form action="{{ route('admin.hapusPengguna', $user->id) }}" method="POST" 
-                            class="w-full md:w-auto"
-                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                                class="bg-red-500 hover:bg-red-700 duration-300 text-white text-sm md:text-base font-medium py-2 px-4 md:px-6 rounded w-full md:w-auto">
-                            Hapus
-                        </button>
-                    </form>
+                    <x-danger-button
+                        class="bg-red-500 hover:bg-red-700 rounded duration-300"
+                        x-data=""
+                        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion-{{ $user->id }}')"
+                    >{{ __('Hapus') }}</x-danger-button>
+
+                    <x-modal name="confirm-user-deletion-{{ $user->id }}" :show="$errors->userDeletion->isNotEmpty()" focusable>
+                        <form method="post" action="{{ route('admin.hapusPengguna', $user->id) }}" class="p-6">
+                            @csrf
+                            @method('DELETE')
+
+                            <h2 class="text-lg font-medium text-gray-900">
+                                {{ __('Apakah Anda yakin ingin menghapus akun ini?') }}
+                            </h2>
+
+                            <p class="mt-1 text-sm text-gray-600">
+                                {{ __('Setelah akun ini dihapus, semua data dan informasi terkait akan hilang secara permanen. Masukkan password Anda untuk mengonfirmasi penghapusan.') }}
+                            </p>
+
+                            <div class="mt-6">
+                                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+
+                                <x-text-input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    class="transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 w-3/4"
+                                    placeholder="{{ __('Password Anda') }}"
+                                    required
+                                />
+
+                                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                            </div>
+
+                            <div class="mt-6 flex justify-end">
+                                <x-secondary-button x-on:click="$dispatch('close')" class="duration-300">
+                                    {{ __('Batal') }}
+                                </x-secondary-button>
+
+                                <x-danger-button type="submit" class="ms-3 bg-red-500 hover:bg-red-700 rounded duration-300">
+                                    {{ __('Hapus Akun') }}
+                                </x-danger-button>
+                            </div>
+                        </form>
+                    </x-modal>
                 </div>
             </div>
         </div>

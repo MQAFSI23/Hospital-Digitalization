@@ -61,7 +61,7 @@
                 </a>
             @endif
 
-            <button type="submit" id="loginForm" class="transform rounded-sm bg-indigo-500 py-2 px-6 font-bold duration-300 hover:bg-indigo-700">
+            <button type="submit" id="loginForm" class="transform rounded-sm bg-indigo-500 py-2 px-2 font-bold duration-300 hover:bg-indigo-700">
                 LOG IN
             </button>
         </div>

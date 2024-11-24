@@ -19,7 +19,7 @@ class ObatFactory extends Factory
             'nama_obat' => $this->faker->unique()->word,
             'deskripsi' => $this->faker->sentence,
             'tipe_obat' => $this->faker->randomElement(['keras', 'biasa']),
-            'stok' => $this->faker->numberBetween(10, 200),  // Menentukan stok obat
+            'stok' => $this->faker->numberBetween(10, 200),
             'gambar_obat' => null,
             'kedaluwarsa' => $tanggalKedaluwarsa->format('Y-m-d'),
             'status_kedaluwarsa' => $statusKedaluwarsa,

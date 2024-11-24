@@ -52,7 +52,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
+                    <a href="{{ route('dokter.daftarPasien') }}" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
                         Daftar Pasien
                     </a>
                 </li>
