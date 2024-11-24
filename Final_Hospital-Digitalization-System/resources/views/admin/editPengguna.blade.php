@@ -131,7 +131,7 @@
             <!-- Submit Button -->
             <div class="flex items-center justify-between mt-8 mb-4">
                 <!-- Back -->
-                <a class="text-lg font-medium text-indigo-500 hover:underline transition-all duration-300" href="{{ route('admin.daftarPengguna') }}">
+                <a class="text-lg font-medium text-indigo-500 hover:underline transition-all duration-300" href="{{ url()->previous() }}">
                     {{ __('Kembali') }}
                 </a>
 

@@ -78,6 +78,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             
         Route::get('/admin/log-obat', [ObatController::class, 'logObat'])
             ->name('admin.logObat');
+        
+        // Riwayat Pemeriksaan
+        Route::get('/admin/riwayat-periksa', [AdminController::class, 'riwayatPeriksa'])
+            ->name('admin.riwayatPeriksa');
     });
 
     // Dokter Routes

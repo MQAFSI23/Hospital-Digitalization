@@ -19,11 +19,9 @@
                 <p class="col-span-2 text-gray-800">: {{ $pasien->name }}</p>
 
                 <p class="font-medium text-gray-600">Tanggal Lahir</p>
-                <p class="col-span-2 text-gray-800">: {{ Carbon::parse($pasien->tanggal_lahir)->format('d-m-Y') }}</p>
-
-                <p class="font-medium text-gray-600">Umur</p>
-                <p class="col-span-2 text-gray-800">: 
-                    {{ Carbon::parse($pasien->tanggal_lahir)->age }} tahun
+                <p class="col-span-2 text-gray-800">:
+                    {{ Carbon::parse($pasien->tanggal_lahir)->format('d-m-Y') }}
+                    ({{ Carbon::parse($pasien->tanggal_lahir)->age }} tahun)
                 </p>
 
                 <p class="font-medium text-gray-600">Jenis Kelamin</p>
@@ -40,9 +38,9 @@
                 <thead class="bg-indigo-600 text-white">
                     <tr>
                         <th class="py-2 px-4 w-16">No</th>
-                        <th class="py-2 px-4">Tanggal</th>
                         <th class="py-2 px-4">Tindakan</th>
                         <th class="py-2 px-4">Diagnosa</th>
+                        <th class="py-2 px-4">Tanggal</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,9 +48,9 @@
                         <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center cursor-pointer"
                             onclick="window.location='{{ route('dokter.detailRekamMedis', $rekamMedis->id) }}';">
                             <td class="py-2 px-4">{{ $index + 1 }}</td>
-                            <td class="py-2 px-4">{{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->tindakan }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->diagnosa }}</td>
+                            <td class="py-2 px-4">{{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</td>
                         </tr>
                     @empty
                         <tr>

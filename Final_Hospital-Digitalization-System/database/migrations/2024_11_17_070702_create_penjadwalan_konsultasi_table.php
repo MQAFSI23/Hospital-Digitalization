@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pasien_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('dokter_id')->constrained('dokter')->onDelete('cascade');
-            $table->enum('konfirmasi', ['ya', 'tidak'])->default('tidak');
-            $table->enum('selesai', ['ya', 'tidak'])->default('tidak');
+            $table->enum('status', ['selesai', 'belum'])->default('belum');
             $table->date('tanggal_konsultasi');
             $table->timestamps();
         });

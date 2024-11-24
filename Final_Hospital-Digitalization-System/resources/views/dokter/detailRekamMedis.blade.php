@@ -15,9 +15,6 @@
         <h2 class="text-xl font-semibold text-gray-800">Informasi Konsultasi</h2>
         <div class="mt-4">
             <div class="grid grid-cols-3 gap-2 text-sm md:text-base">
-                <p class="font-medium text-gray-600">Tanggal Berobat</p>
-                <p class="col-span-2 text-gray-800">: {{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</p>
-
                 <p class="font-medium text-gray-600">Pasien</p>
                 <p class="col-span-2 text-gray-800">: {{ $rekamMedis->pasien->name }}</p>
 
@@ -26,6 +23,9 @@
 
                 <p class="font-medium text-gray-600">Diagnosa</p>
                 <p class="col-span-2 text-gray-800">: {{ $rekamMedis->diagnosa }}</p>
+
+                <p class="font-medium text-gray-600">Tanggal Konsultasi</p>
+                <p class="col-span-2 text-gray-800">: {{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</p>
             </div>
         </div>
     </div>

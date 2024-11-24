@@ -14,6 +14,7 @@ class RekamMedis extends Model
         'dokter_id',
         'obat_id',
         'tindakan',
+        'diagnosa',
         'tanggal_berobat',
         'created_by',
     ];

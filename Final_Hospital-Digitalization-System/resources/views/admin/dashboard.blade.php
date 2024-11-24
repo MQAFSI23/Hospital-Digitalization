@@ -49,7 +49,8 @@
                     </thead>
                     <tbody class="text-center">
                         @forelse ($dokterBertugas as $index => $jadwal)
-                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100">
+                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 cursor-pointer"
+                                onclick="window.location='{{ route('admin.detailPengguna', $jadwal->dokter->user->id) }}';">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 <td class="py-2 px-4">{{ $jadwal->dokter->user->name }}</td> <!-- Nama Dokter -->
                                 <td class="py-2 px-4">{{ ucfirst($jadwal->dokter->jenis_dokter) }}</td> <!-- Jenis Dokter -->
@@ -58,6 +59,38 @@
                         @empty
                             <tr>
                                 <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada dokter yang bertugas hari ini.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tabel Pasien Hari Ini -->
+        <div class="max-h-80 overflow-hidden bg-white p-6 rounded shadow-lg mt-8">
+            <h2 class="text-xl font-semibold text-gray-800">Pasien Hari Ini</h2>
+            <div class="overflow-y-auto overflow-x-auto max-h-60 mt-2">
+                <table class="min-w-full border-collapse table-fixed">
+                    <thead class="bg-indigo-600 text-white sticky top-0 z-10">
+                        <tr>
+                            <th class="py-2 px-4 w-16">No</th>
+                            <th class="py-2 px-4">Nama Pasien</th>
+                            <th class="py-2 px-4">Email Pasien</th>
+                            <th class="py-2 px-4">Nama Dokter Tujuan</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white text-center">
+                        @forelse ($pasienHariIni as $index => $pasient)
+                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 cursor-pointer"
+                                onclick="window.location='{{ route('admin.detailPengguna', $pasient->pasien->id) }}';">
+                                <td class="py-2 px-4">{{ $index + 1 }}</td>
+                                <td class="py-2 px-4">{{ $pasient->pasien->name }}</td>
+                                <td class="py-2 px-4">{{ $pasient->pasien->email }}</td>
+                                <td class="py-2 px-4">{{ $pasient->dokter->user->name }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada pengguna baru dalam sebulan terakhir.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -89,7 +122,8 @@
                     </thead>
                     <tbody class="bg-white text-center">
                         @forelse ($penggunaTerbaru as $index => $user)
-                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100">
+                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 cursor-pointer"
+                                onclick="window.location='{{ route('admin.detailPengguna', $user->id) }}';">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
                                 @if ($user->id === auth()->user()->id)
                                     <td class="py-2 px-4">{{ $user->name }} (Anda)</td>
@@ -109,5 +143,6 @@
                 </table>
             </div>
         </div>
+
     </div>
 @endsection

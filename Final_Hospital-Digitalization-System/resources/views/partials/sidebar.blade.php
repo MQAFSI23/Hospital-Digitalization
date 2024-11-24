@@ -44,6 +44,11 @@
                         Log Obat
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.riwayatPeriksa') }}" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
+                        Riwayat Pemeriksaan
+                    </a>
+                </li>
             @elseif (auth()->user()->role === 'dokter')
                 <!-- Dokter Menu -->
                 <li>
@@ -54,11 +59,6 @@
                 <li>
                     <a href="{{ route('dokter.daftarPasien') }}" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
                         Daftar Pasien
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
-                        Rekam Medis
                     </a>
                 </li>
             @elseif (auth()->user()->role === 'pasien')

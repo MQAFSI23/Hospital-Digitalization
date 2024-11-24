@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JadwalTugas;
 use App\Models\User;
 use App\Models\Dokter;
+use App\Models\RekamMedis;
 use App\Models\PenjadwalanKonsultasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,10 +21,16 @@ class AdminController extends Controller
             ->where('hari_tugas', Carbon::now()->isoFormat('dddd'))
             ->get();
         $jumlahDokterBertugas = JadwalTugas::where('hari_tugas', Carbon::now()->isoFormat('dddd'))->count();
+
+        $pasienHariIni = PenjadwalanKonsultasi::with(['pasien', 'pasien.dokter.user'])
+            ->whereDate('tanggal_konsultasi', Carbon::today())
+            ->get();
+        $jumlahPasienHariIni = $pasienHariIni->count();
+
         $jumlahPengguna = User::count();
-        $jumlahPasienHariIni = PenjadwalanKonsultasi::whereDate('tanggal_konsultasi', Carbon::today())->count();
         $penggunaTerbaru = User::where('created_at', '>=', Carbon::now()->subMonth())->get();
         $jumlahPenggunaTerbaru = User::where('created_at', '>=', Carbon::now()->subMonth())->count();
+
         $obats = Obat::where('status_kedaluwarsa', 'belum kedaluwarsa')
                     ->where('kedaluwarsa', '<', Carbon::today())
                     ->get();
@@ -33,7 +40,9 @@ class AdminController extends Controller
             $obat->save();
         }
     
-        return view('admin.dashboard', compact('dokterBertugas', 'jumlahPengguna', 'jumlahDokterBertugas', 'jumlahPasienHariIni', 'penggunaTerbaru', 'jumlahPenggunaTerbaru'));
+        return view('admin.dashboard', compact(
+            'dokterBertugas', 'jumlahPengguna', 'jumlahDokterBertugas', 'pasienHariIni',
+                    'jumlahPasienHariIni', 'penggunaTerbaru', 'jumlahPenggunaTerbaru'));
     }
 
     public function daftarPengguna(Request $request)
@@ -194,6 +203,50 @@ class AdminController extends Controller
         $user->delete();
 
         return redirect()->route('admin.daftarPengguna')->with('status', 'Pengguna berhasil dihapus.');
+    }
+
+    public function riwayatPeriksa(Request $request)
+    {
+        $query = RekamMedis::with(['pasien', 'pasien.dokter.user']);
+
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+    
+            $query->whereHas('pasien', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', $searchTerm);
+            })->orWhereHas('dokter.user', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', $searchTerm);
+            });
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('tanggal_berobat', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('tanggal_berobat', '<=', $request->date_to);
+        }
+
+        if ($request->filled('sort_by')) {
+            $sortBy = $request->sort_by === 'name' ? 'pasien.name' : ($request->sort_by === 'dokter.name' ? 'dokter.user.name' : 'tanggal_berobat');
+            $sortOrder = $request->sort_order ?? 'asc';
+    
+            if ($sortBy === 'pasien.name') {
+                $query->join('users as pasien', 'rekam_medis.pasien_id', '=', 'pasien.id')
+                    ->orderBy('pasien.name', $sortOrder)
+                    ->select('rekam_medis.*');
+            } elseif ($sortBy === 'dokter.user.name') {
+                $query->join('users as dokter_user', 'rekam_medis.dokter_id', '=', 'dokter_user.id')
+                    ->orderBy('dokter_user.name', $sortOrder)
+                    ->select('rekam_medis.*');
+            } else {
+                $query->orderBy($sortBy, $sortOrder);
+            }
+        }
+
+        $daftarPasien = $query->get();
+
+        return view('admin.riwayatPeriksa', compact('daftarPasien'));
     }
     
 }

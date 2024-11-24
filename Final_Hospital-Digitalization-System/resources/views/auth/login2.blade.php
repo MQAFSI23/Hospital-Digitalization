@@ -1,6 +1,6 @@
 @extends('layouts.auth-layout')
 
-@section('title', 'Log In')
+@section('title', 'Hozpitalz')
 
 @section('content')
 <section class="flex flex-col w-full max-w-lg px-8 sm:px-8 lg:px-8 space-y-10">

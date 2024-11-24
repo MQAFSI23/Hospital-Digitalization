@@ -1,3 +1,7 @@
+@php
+    use \Carbon\Carbon;
+@endphp
+
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
@@ -18,7 +22,7 @@
     <!-- Read-Only Date of Birth -->
     <div class="mt-4">
         <x-input-label for="tanggal_lahir" :value="__('Tanggal Lahir')" />
-        <x-text-input id="tanggal_lahir" name="tanggal_lahir" type="text" class="relative w-full transform border-b-2 bg-gray-100 text-lg duration-300 focus-within:border-indigo-500 mt-6 cursor-not-allowed" :value="old('tanggal_lahir', $user->tanggal_lahir)" readonly />
+        <x-text-input id="tanggal_lahir" name="tanggal_lahir" type="text" class="relative w-full transform border-b-2 bg-gray-100 text-lg duration-300 focus-within:border-indigo-500 mt-6 cursor-not-allowed" :value="old('tanggal_lahir',  Carbon::parse($user->tanggal_lahir)->format('d-m-Y'))" readonly />
     </div>
 
     <!-- Read-Only Gender -->

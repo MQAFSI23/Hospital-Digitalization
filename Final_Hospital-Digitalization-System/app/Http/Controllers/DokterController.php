@@ -6,49 +6,69 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\RekamMedis;
+use Illuminate\Support\Facades\DB;
 use App\Models\PenjadwalanKonsultasi;
 
 class DokterController extends Controller
 {
     public function dashboard()
     {
-        $dokterId = auth()->user()->id;
+        $dokterId = auth()->user()->dokter->id;
+        $jadwalDokter = auth()->user()->dokter->jadwalTugas;
+
         $pasienSelesai = RekamMedis::with(['pasien' => function ($query) {
                 $query->where('role', 'pasien');
             }])
             ->where('dokter_id', $dokterId)
-            ->latest('tanggal_berobat')
-            ->take(5)
+            ->whereDate('tanggal_berobat', Carbon::today())
+            ->whereIn(DB::raw('DAYOFWEEK(tanggal_berobat)'), $this->getHariTugasAsDayOfWeek($jadwalDokter))
             ->get();
 
-        // Janji yg sudah dikonfirmasi
+        $totalPasienSelesai = $pasienSelesai->count();
+
         $pasienKonsul = PenjadwalanKonsultasi::with('pasien')
             ->where('dokter_id', $dokterId)
-            ->where('konfirmasi', 'ya')
-            ->where('selesai', 'tidak')
+            ->whereDate('tanggal_konsultasi', Carbon::today())
+            ->whereIn(DB::raw('DAYOFWEEK(tanggal_konsultasi)'), $this->getHariTugasAsDayOfWeek($jadwalDokter))
             ->get();
-
-        $totalJanji = PenjadwalanKonsultasi::with('pasien')
-            ->where('konfirmasi', 'ya')
-            ->where('dokter_id', $dokterId)->count();
-
-        // Janji yg belum dikonfirmasi
-        $pasienMintaKonsul = PenjadwalanKonsultasi::with('pasien')
-            ->where('dokter_id', $dokterId)
-            ->where('konfirmasi', 'tidak')
-            ->get();
-
-        $totalMintaJanji = PenjadwalanKonsultasi::with('pasien')
-            ->where('konfirmasi', 'tidak')
-            ->where('dokter_id', $dokterId)->count();
     
+        $pasienKonsul = $pasienKonsul->map(function ($penjadwalan) {
+            $penjadwalan->rekamMedis = RekamMedis::where('pasien_id', $penjadwalan->pasien->id)
+                                                ->whereDate('tanggal_berobat', Carbon::today())
+                                                ->first();
+            return $penjadwalan;
+        });
+
+        $totalKonsul = $pasienKonsul->count();
+        
         return view('dokter.dashboard', compact(
-            'pasienSelesai', 'pasienKonsul', 'totalJanji', 'pasienMintaKonsul', 'totalMintaJanji'));
+            'pasienSelesai', 'pasienKonsul', 'totalKonsul', 'totalPasienSelesai', 'jadwalDokter'));
+    }
+
+    /**
+     * Mengubah hari tugas menjadi format DAYOFWEEK
+     */
+    private function getHariTugasAsDayOfWeek($jadwalDokter)
+    {
+        $hariTugas = $jadwalDokter->pluck('hari_tugas')->toArray();
+        $hariIndo = [
+            'Senin' => 2,
+            'Selasa' => 3,
+            'Rabu' => 4,
+            'Kamis' => 5,
+            'Jumat' => 6,
+            'Sabtu' => 7,
+            'Minggu' => 1,
+        ];
+
+        return array_map(function($hari) use ($hariIndo) {
+            return $hariIndo[$hari] ?? null; // Mengubah hari Indonesia ke format DAYOFWEEK (1-7)
+        }, $hariTugas);
     }
 
     public function daftarPasien(Request $request)
     {
-        $dokterId = auth()->id();
+        $dokterId = auth()->user()->dokter->id;
 
         $query = RekamMedis::with('pasien')
             ->where('dokter_id', $dokterId);
@@ -87,7 +107,7 @@ class DokterController extends Controller
 
     public function detailPasien($id)
     {
-        $dokterId = auth()->id();
+        $dokterId = auth()->user()->dokter->id;
 
         $pasien = User::where('id', $id)
             ->where('role', 'pasien')
@@ -102,7 +122,7 @@ class DokterController extends Controller
 
     public function detailRekamMedis($id)
     {
-        $dokterId = auth()->id();
+        $dokterId = auth()->user()->dokter->id;
 
         $rekamMedis = RekamMedis::with('pasien')
             ->where('dokter_id', $dokterId)
