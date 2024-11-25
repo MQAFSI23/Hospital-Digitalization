@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\PenjadwalanKonsultasi;
-use App\Models\User;
+use App\Models\Pasien;
 use App\Models\Dokter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
@@ -19,7 +19,7 @@ class PenjadwalanKonsultasiFactory extends Factory
      */
     public function definition()
     {
-        $pasien = User::where('role', 'pasien')->inRandomOrder()->first();
+        $pasien = Pasien::inRandomOrder()->first();
         $dokter = Dokter::inRandomOrder()->first();
 
         return [

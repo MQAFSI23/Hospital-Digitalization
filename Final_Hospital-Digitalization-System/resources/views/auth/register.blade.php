@@ -50,6 +50,28 @@
                 <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
             @enderror
 
+            <!-- Berat Badan -->
+            <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
+                <x-input-label for="berat_badan" :value="__('Berat Badan (kg)')" />
+                <input type="number" id="berat_badan" name="berat_badan" placeholder="Berat Badan (kg)"
+                    class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
+                    value="{{ old('berat_badan') }}" step="0.1" min="0" required autocomplete="off">
+            </div>
+            @error('berat_badan')
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+            @enderror
+
+            <!-- Tinggi Badan -->
+            <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
+                <x-input-label for="tinggi_badan" :value="__('Tinggi Badan (cm)')" />
+                <input type="number" id="tinggi_badan" name="tinggi_badan" placeholder="Tinggi Badan (cm)"
+                    class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
+                    value="{{ old('tinggi_badan') }}" step="0.1" min="0" required autocomplete="off">
+            </div>
+            @error('tinggi_badan')
+                <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+            @enderror
+
             <!-- Username -->
             <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
                 <x-input-label for="username" :value="__('Username')"  />

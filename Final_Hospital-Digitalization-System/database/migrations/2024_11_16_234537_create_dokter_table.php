@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('dokter', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dokter_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('jenis_dokter', ['umum', 'spesialis']);
             $table->enum('spesialisasi', ['kardiologi', 'neurologi', 'gastroenterologi', 'pediatri', 'pulmonologi'])->nullable();
             $table->timestamps();

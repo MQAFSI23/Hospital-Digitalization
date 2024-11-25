@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Obat;
+use App\Models\Resep;
 use App\Models\Dokter;
+use App\Models\Pasien;
 use App\Models\LogObat;
 use App\Models\Feedback;
 use App\Models\RekamMedis;
@@ -44,7 +46,7 @@ class DatabaseSeeder extends Seeder
             ->each(function ($user) {
                 
                 if ($user->role === 'dokter') {
-                    $dokter = Dokter::factory()->create(['dokter_id' => $user->id]);
+                    $dokter = Dokter::factory()->create(['user_id' => $user->id]);
             
                     JadwalTugas::factory()->create([
                         'dokter_id' => $dokter->id,
@@ -60,7 +62,14 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('pasien123'),
                 'role' => 'pasien',
                 'email_verified_at' => now()
-            ]);
+            ])
+            ->each(function ($user) {
+                Pasien::create([
+                    'user_id' => $user->id,
+                    'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
+                    'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
+                ]);
+            });
 
         User::factory() // Random Tester
             ->count(30)
@@ -71,10 +80,16 @@ class DatabaseSeeder extends Seeder
                 $user->save();
                 
                 if ($user->role === 'dokter') {
-                    $dokter = Dokter::factory()->create(['dokter_id' => $user->id]);
+                    $dokter = Dokter::factory()->create(['user_id' => $user->id]);
             
                     JadwalTugas::factory()->create([
                         'dokter_id' => $dokter->id,
+                    ]);
+                } elseif ($user->role === 'pasien') {
+                    Pasien::create([
+                        'user_id' => $user->id,
+                        'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
+                        'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
                     ]);
                 }
             });
@@ -85,10 +100,16 @@ class DatabaseSeeder extends Seeder
             ->each(function ($user) {
 
                 if ($user->role === 'dokter') {
-                    $dokter = Dokter::factory()->create(['dokter_id' => $user->id]);
+                    $dokter = Dokter::factory()->create(['user_id' => $user->id]);
             
                     JadwalTugas::factory()->create([
                         'dokter_id' => $dokter->id,
+                    ]);
+                } elseif ($user->role === 'pasien') {
+                    Pasien::create([
+                        'user_id' => $user->id,
+                        'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
+                        'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
                     ]);
                 }
             });
@@ -104,12 +125,22 @@ class DatabaseSeeder extends Seeder
                 ]);
             });
         Feedback::factory()->count(20)->create();
+
         RekamMedis::factory()
             ->count(15)
-            ->hasAttached(
-                Obat::all()->random(3)
+            ->has(
+                Resep::factory()
+                    ->count(3)
+                    ->state(function (array $attributes, RekamMedis $rekamMedis) {
+                        return [
+                            'rekam_medis_id' => $rekamMedis->id,
+                            'obat_id' => Obat::all()->random()->id, // Ambil obat secara acak
+                        ];
+                    }),
+                'resep'
             )
             ->create();
+
         PenjadwalanKonsultasi::factory()->count(15)->create();
     }
 }

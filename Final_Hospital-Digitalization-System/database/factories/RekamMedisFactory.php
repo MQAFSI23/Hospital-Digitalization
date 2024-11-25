@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\RekamMedis;
 use App\Models\User;
 use App\Models\Dokter;
-use App\Models\Obat;
+use App\Models\Resep;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RekamMedisFactory extends Factory
@@ -26,11 +26,11 @@ class RekamMedisFactory extends Factory
         ];
     }
 
-    public function withObat($count = 3)
+    public function withResep($jumlahResep = 3)
     {
-        return $this->afterCreating(function (RekamMedis $rekamMedis) use ($count) {
-            $obatIds = Obat::inRandomOrder()->limit($count)->pluck('id');
-            $rekamMedis->obat()->attach($obatIds);
-        });
+        return $this->has(
+            Resep::factory()->count($jumlahResep),
+            'resep'
+        );
     }
 }

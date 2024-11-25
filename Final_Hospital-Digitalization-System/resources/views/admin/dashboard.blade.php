@@ -90,7 +90,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada pengguna baru dalam sebulan terakhir.</td>
+                                <td colspan="4" class="py-3 text-left text-gray-500">Tidak ada pasien hari ini.</td>
                             </tr>
                         @endforelse
                     </tbody>

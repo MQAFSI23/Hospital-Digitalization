@@ -22,58 +22,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'name', 'username', 'email', 'password', 'role', 'tanggal_lahir', 'jenis_kelamin',
     ];
 
-    /**
-     * Relasi untuk mendapatkan feedback yang diberikan oleh pasien (untuk dokter)
-     */
-    public function feedbackDokter()
+    // Relasi ke model Pasien
+    public function pasien()
     {
-        return $this->hasMany(Feedback::class, 'dokter_id');
-    }
-
-    /**
-     * Relasi untuk mendapatkan feedback yang diberikan oleh dokter (untuk pasien)
-     */
-    public function feedbackPasien()
-    {
-        return $this->hasMany(Feedback::class, 'pasien_id');
+        return $this->hasOne(Pasien::class, 'user_id');
     }
 
     // Relasi ke model Dokter
     public function dokter()
     {
-        return $this->hasOne(Dokter::class, 'dokter_id');
-    }
-
-    /**
-     * Relasi dengan model RekamMedis sebagai Pasien
-     */
-    public function rekamMedisSebagaiPasien()
-    {
-        return $this->hasMany(RekamMedis::class, 'pasien_id');
-    }
-
-    /**
-     * Relasi dengan model RekamMedis sebagai Dokter
-     */
-    public function rekamMedisSebagaiDokter()
-    {
-        return $this->hasMany(RekamMedis::class, 'dokter_id');
-    }
-
-    /**
-     * Relasi dengan tabel PenjadwalanKonsultasi untuk Pasien.
-     */
-    public function penjadwalanKonsultasi()
-    {
-        return $this->hasMany(PenjadwalanKonsultasi::class, 'id_pasien');
-    }
-
-    /**
-     * Relasi dengan tabel PenjadwalanKonsultasi untuk Dokter.
-     */
-    public function konsultasiDokter()
-    {
-        return $this->hasMany(PenjadwalanKonsultasi::class, 'id_dokter');
+        return $this->hasOne(Dokter::class, 'user_id');
     }
 
     /**

@@ -81,8 +81,8 @@ class AdminController extends Controller
 
     public function detailPengguna($id)
     {
-        $user = User::findOrFail($id);
-        $dokter = Dokter::with('jadwalTugas')->where('dokter_id', $id)->first();
+        $user = User::with('pasien')->findOrFail($id);
+        $dokter = Dokter::with('jadwalTugas')->where('user_id', $id)->first();
 
         return view('admin.detailPengguna', compact('user', 'dokter'));
     }
@@ -152,7 +152,7 @@ class AdminController extends Controller
         if ($user->role === 'dokter') {
             if (!$dokter) {
                 $dokter = Dokter::create([
-                    'dokter_id' => $user->id,
+                    'user_id' => $user->id,
                     'jenis_dokter' => $validated['jenis_dokter'],
                     'spesialisasi' => $validated['spesialisasi'],
                 ]);

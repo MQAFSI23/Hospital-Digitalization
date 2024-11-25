@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rekam_medis_obat', function (Blueprint $table) {
+        Schema::create('pasien', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rekam_medis_id')->constrained('rekam_medis')->onDelete('cascade');
-            $table->foreignId('obat_id')->constrained('obat')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->float('berat_badan')->nullable()->comment('Berat badan pasien dalam kg');
+            $table->float('tinggi_badan')->nullable()->comment('Tinggi badan pasien dalam cm');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rekam_medis_obat');
+        Schema::dropIfExists('pasien');
     }
 };

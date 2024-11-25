@@ -32,11 +32,10 @@ class Obat extends Model
     /**
      * Relasi n-to-n dengan RekamMedis
      */
-    public function rekamMedis()
+    public function resep()
     {
-        return $this->belongsToMany(RekamMedis::class, 'rekam_medis_obat', 'obat_id', 'rekam_medis_id')
-                    ->withTimestamps();
-    }
+        return $this->hasMany(Resep::class, 'obat_id');
+    }    
 
     public function logObat()
     {

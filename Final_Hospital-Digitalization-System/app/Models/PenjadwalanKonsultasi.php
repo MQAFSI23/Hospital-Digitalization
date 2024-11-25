@@ -24,7 +24,7 @@ class PenjadwalanKonsultasi extends Model
      */
     public function pasien()
     {
-        return $this->belongsTo(User::class, 'pasien_id');
+        return $this->belongsTo(Pasien::class, 'pasien_id');
     }
 
     /**
@@ -34,14 +34,5 @@ class PenjadwalanKonsultasi extends Model
     {
         return $this->belongsTo(Dokter::class, 'dokter_id');
     }
-
-    public function isDokter()
-    {
-        return $this->dokter()->exists();
-    }
-
-    public function isPasien()
-    {
-        return $this->pasien()->exists();
-    }
+    
 }

@@ -12,7 +12,6 @@ class RekamMedis extends Model
     protected $fillable = [
         'pasien_id',
         'dokter_id',
-        'obat_id',
         'tindakan',
         'diagnosa',
         'tanggal_berobat',
@@ -24,7 +23,7 @@ class RekamMedis extends Model
      */
     public function pasien()
     {
-        return $this->belongsTo(User::class, 'pasien_id', 'id');
+        return $this->belongsTo(Pasien::class, 'pasien_id');
     }
 
     /**
@@ -38,9 +37,9 @@ class RekamMedis extends Model
     /**
      * Relasi dengan model Obat
      */
-    public function obats()
+    public function resep()
     {
-        return $this->belongsToMany(Obat::class, 'rekam_medis_obat', 'rekam_medis_id', 'obat_id')
-                    ->withTimestamps();
+        return $this->hasMany(Resep::class, 'rekam_medis_id');
     }
+    
 }

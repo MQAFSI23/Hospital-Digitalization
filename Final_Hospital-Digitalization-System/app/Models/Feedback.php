@@ -9,6 +9,8 @@ class Feedback extends Model
 {
     use HasFactory;
 
+    protected $table = 'feedback';
+
     protected $fillable = [
         'dokter_id',
         'pasien_id',
@@ -17,18 +19,18 @@ class Feedback extends Model
     ];
 
     /**
-     * Relasi dengan Dokter (User)
+     * Relasi dengan Dokter
      */
     public function dokter()
     {
-        return $this->belongsTo(User::class, 'dokter_id');
+        return $this->belongsTo(Dokter::class, 'dokter_id');
     }
 
     /**
-     * Relasi dengan Pasien (User)
+     * Relasi dengan Pasien
      */
     public function pasien()
     {
-        return $this->belongsTo(User::class, 'pasien_id');
+        return $this->belongsTo(Pasien::class, 'pasien_id');
     }
 }

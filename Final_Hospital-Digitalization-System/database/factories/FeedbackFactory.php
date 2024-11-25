@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Feedback;
-use App\Models\User;
+use App\Models\Pasien;
 use App\Models\Dokter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,8 +18,8 @@ class FeedbackFactory extends Factory
      */
     public function definition()
     {
-        $dokter = User::where('role', 'dokter')->inRandomOrder()->first();
-        $pasien = DOkter::inRandomOrder()->first();
+        $dokter = Dokter::inRandomOrder()->first();
+        $pasien = Pasien::inRandomOrder()->first();
 
         return [
             'dokter_id' => $dokter->id,

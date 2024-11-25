@@ -41,7 +41,7 @@ class DokterFactory extends Factory
         }
 
         return [
-            'dokter_id' => $dokterUser->id,  // Mengambil ID user yang memiliki peran 'dokter'
+            'user_id' => $dokterUser->id,  // Mengambil ID user yang memiliki peran 'dokter'
             'jenis_dokter' => $jenisDokter,
             'spesialisasi' => $spesialisasi,
         ];
