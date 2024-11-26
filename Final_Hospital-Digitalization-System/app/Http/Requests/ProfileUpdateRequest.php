@@ -25,6 +25,8 @@ class ProfileUpdateRequest extends FormRequest
                 'max:127',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'berat_badan' => ['nullable', 'numeric', 'min:0.1'],
+            'tinggi_badan' => ['nullable', 'numeric', 'min:20'],
         ];
     }
 }

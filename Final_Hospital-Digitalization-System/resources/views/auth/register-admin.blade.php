@@ -105,12 +105,37 @@
                 <x-input-error :messages="$errors->get('role')" class="text-red-600 mt-2" />
             </div>
 
+            <!-- Additional Inputs for Pasien -->
+            <div id="pasienDetails" class="hidden mt-6 text-lg">
+                <!-- Berat Badan -->
+                <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
+                    <x-input-label for="berat_badan" :value="__('Berat Badan (kg)')" />
+                    <input type="number" id="berat_badan" name="berat_badan" placeholder="Berat Badan (kg)"
+                        class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
+                        value="{{ old('berat_badan') }}" step="0.1" min="0" autocomplete="off">
+                </div>
+                @error('berat_badan')
+                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                @enderror
+
+                <!-- Tinggi Badan -->
+                <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
+                    <x-input-label for="tinggi_badan" :value="__('Tinggi Badan (cm)')" />
+                    <input type="number" id="tinggi_badan" name="tinggi_badan" placeholder="Tinggi Badan (cm)"
+                        class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
+                        value="{{ old('tinggi_badan') }}" step="0.1" min="0" autocomplete="off">
+                </div>
+                @error('tinggi_badan')
+                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                @enderror
+            </div>
+
             <!-- Additional Inputs for Dokter -->
             <div id="dokterDetails" class="hidden mt-6 text-lg">
                 <!-- Jenis Dokter -->
                 <div class="mt-6">
                     <x-input-label for="jenis_dokter" :value="__('Jenis Dokter')" />
-                    <select id="jenis_dokter" name="jenis_dokter" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500" required>
+                    <select id="jenis_dokter" name="jenis_dokter" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
                         <option value="umum">Umum</option>
                         <option value="spesialis">Spesialis</option>
                     </select>
@@ -131,7 +156,7 @@
                 </div>
 
                 <!-- Jadwal Tugas -->
-                <div id="jadwalTugas" class="hidden mt-6">
+                <div id="jadwalTugas" class="mt-6">
                     <x-input-label for="jadwal_tugas" :value="__('Hari Tugas')" />
                     <div>
                         @foreach(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $hari)
@@ -173,21 +198,26 @@
 
     <script>
         const roleInput = document.getElementById('role');
+        const pasienDetails = document.getElementById('pasienDetails');
         const dokterDetails = document.getElementById('dokterDetails');
         const jenisDokter = document.getElementById('jenis_dokter');
-        const jadwalTugas = document.getElementById('jadwalTugas');
         const spesialisasiField = document.getElementById('spesialisasiField');
 
         function updateVisibility() {
             if (roleInput.value === 'dokter') {
+                pasienDetails.classList.add('hidden');
                 dokterDetails.classList.remove('hidden');
-                jadwalTugas.classList.remove('hidden');
                 if (jenisDokter.value === 'spesialis') {
                     spesialisasiField.classList.remove('hidden');
                 } else {
                     spesialisasiField.classList.add('hidden');
                 }
+            } else if (roleInput.value === 'pasien') {
+                pasienDetails.classList.remove('hidden');
+                dokterDetails.classList.add('hidden');
+                spesialisasiField.classList.add('hidden');
             } else {
+                pasienDetails.classList.add('hidden');
                 dokterDetails.classList.add('hidden');
                 spesialisasiField.classList.add('hidden');
             }

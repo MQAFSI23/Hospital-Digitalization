@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JadwalTugas;
 use App\Models\User;
+use App\Models\Pasien;
 use App\Models\Dokter;
 use App\Models\RekamMedis;
 use App\Models\PenjadwalanKonsultasi;
@@ -28,7 +29,12 @@ class AdminController extends Controller
         $jumlahPasienHariIni = $pasienHariIni->count();
 
         $jumlahPengguna = User::count();
-        $penggunaTerbaru = User::where('created_at', '>=', Carbon::now()->subMonth())->get();
+        $penggunaTerbaru = User::whereBetween('created_at', [
+                Carbon::now()->subDays(30)->startOfDay(),
+                Carbon::now()->endOfDay()
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
         $jumlahPenggunaTerbaru = User::where('created_at', '>=', Carbon::now()->subMonth())->count();
 
         $obats = Obat::where('status_kedaluwarsa', 'belum kedaluwarsa')
@@ -89,7 +95,7 @@ class AdminController extends Controller
 
     public function editPengguna($id)
     {
-        $user = User::with(['dokter.jadwalTugas'])->findOrFail($id);
+        $user = User::with(['dokter.jadwalTugas', 'pasien'])->findOrFail($id);
         $spesialisasiOptions = ['kardiologi', 'neurologi', 'gastroenterologi', 'pediatri', 'pulmonologi'];
         $jenisDokterOptions = ['umum', 'spesialis'];
         $hariOptions = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -101,7 +107,7 @@ class AdminController extends Controller
 
     public function updatePengguna(Request $request, $id)
     {
-        $user = User::with(['dokter.jadwalTugas'])->findOrFail($id);
+        $user = User::with(['dokter.jadwalTugas', 'pasien'])->findOrFail($id);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:127'],
@@ -109,6 +115,8 @@ class AdminController extends Controller
             'jenis_kelamin' => ['required', 'in:pria,wanita'],
             'username' => ['required', 'string', 'max:15', 'unique:users,username,' . $id, 'alpha_num'],
             'role' => ['required', 'in:admin,dokter,pasien'],
+            'berat_badan' => ['nullable', 'required_if:role,pasien', 'numeric', 'min:0.1'],
+            'tinggi_badan' => ['nullable', 'required_if:role,pasien', 'numeric', 'min:20'],
             'jenis_dokter' => ['nullable', 'required_if:role,dokter', 'in:umum,spesialis'],
             'spesialisasi' => ['nullable', 'required_if:jenis_dokter,spesialis', 'in:kardiologi,neurologi,gastroenterologi,pediatri,pulmonologi'],
             'jadwal_tugas' => ['nullable', 'required_if:role,dokter', 'array'],
@@ -123,6 +131,7 @@ class AdminController extends Controller
             return redirect()->route('admin.daftarPengguna')->with('error', 'Password admin tidak valid. Tidak ada perubahan yang dilakukan.');
         }
 
+        $pasien = $user->pasien;
         $dokter = $user->dokter;
 
         $isUserChanged = $user->name !== $validated['name'] ||
@@ -137,10 +146,26 @@ class AdminController extends Controller
             $dokter->jadwalTugas->pluck('hari_tugas')->sort()->toArray() !== collect($validated['jadwal_tugas'] ?? [])->sort()->toArray()
         );
 
-        if (!$isUserChanged && !$isDokterChanged) {
+        $isPasienChanged = $user->role === 'pasien' && $pasien && (
+            $pasien->berat_badan !== ($validated['berat_badan'] ?? null) ||
+            $pasien->tinggi_badan !== ($validated['tinggi_badan'] ?? null)
+        );
+
+        if (!$isUserChanged && !$isDokterChanged && !$isPasienChanged) {
             return redirect()->route('admin.daftarPengguna')->with('nothing', 'Tidak ada perubahan yang dilakukan.');
         }
 
+        if ($user->role !== $validated['role']) {
+            if ($user->role === 'dokter' && $dokter) {
+                $dokter->jadwalTugas()->delete();
+                $dokter->delete();
+            }
+        
+            if ($user->role === 'pasien' && $pasien) {
+                $pasien->delete();
+            }
+        }
+        
         $user->update([
             'name' => $validated['name'],
             'tanggal_lahir' => $validated['tanggal_lahir'],
@@ -148,7 +173,7 @@ class AdminController extends Controller
             'username' => $validated['username'],
             'role' => $validated['role'],
         ]);
-
+        
         if ($user->role === 'dokter') {
             if (!$dokter) {
                 $dokter = Dokter::create([
@@ -162,28 +187,39 @@ class AdminController extends Controller
                     'spesialisasi' => $validated['spesialisasi'],
                 ]);
             }
-    
+        
             if (!empty($validated['jadwal_tugas'])) {
                 $currentJadwalTugas = $dokter->jadwalTugas->pluck('hari_tugas')->toArray();
                 $newJadwalTugas = $validated['jadwal_tugas'];
-    
+        
                 foreach ($newJadwalTugas as $hari) {
                     if (!in_array($hari, $currentJadwalTugas)) {
                         $dokter->jadwalTugas()->create(['hari_tugas' => $hari]);
                     }
                 }
-    
+        
                 foreach ($currentJadwalTugas as $hari) {
                     if (!in_array($hari, $newJadwalTugas)) {
                         $dokter->jadwalTugas()->where('hari_tugas', $hari)->delete();
                     }
                 }
             }
-
-        } elseif ($dokter) {
-            $dokter->jadwalTugas()->delete();
-            $dokter->delete();
         }
+        
+        elseif ($user->role === 'pasien') {
+            if (!$pasien) {
+                $pasien = Pasien::create([
+                    'user_id' => $user->id,
+                    'berat_badan' => $validated['berat_badan'],
+                    'tinggi_badan' => $validated['tinggi_badan'],
+                ]);
+            } else {
+                $pasien->update([
+                    'berat_badan' => $validated['berat_badan'],
+                    'tinggi_badan' => $validated['tinggi_badan'],
+                ]);
+            }
+        }        
 
         return redirect()->route('admin.daftarPengguna')->with('status', 'Data pengguna berhasil diperbarui.');
     }
@@ -207,15 +243,18 @@ class AdminController extends Controller
 
     public function riwayatPeriksa(Request $request)
     {
-        $query = RekamMedis::with(['pasien', 'pasien.dokter.user']);
+        $query = RekamMedis::with(['pasien.user', 'dokter.user']);
 
         if ($request->filled('search')) {
             $searchTerm = '%' . $request->search . '%';
-    
-            $query->whereHas('pasien', function ($q) use ($searchTerm) {
-                $q->where('name', 'like', $searchTerm);
-            })->orWhereHas('dokter.user', function ($q) use ($searchTerm) {
-                $q->where('name', 'like', $searchTerm);
+
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereHas('pasien.user', function ($subQuery) use ($searchTerm) {
+                    $subQuery->where('name', 'like', $searchTerm);
+                })
+                ->orWhereHas('dokter.user', function ($subQuery) use ($searchTerm) {
+                    $subQuery->where('name', 'like', $searchTerm);
+                });
             });
         }
 
@@ -228,20 +267,19 @@ class AdminController extends Controller
         }
 
         if ($request->filled('sort_by')) {
-            $sortBy = $request->sort_by === 'name' ? 'pasien.name' : ($request->sort_by === 'dokter.name' ? 'dokter.user.name' : 'tanggal_berobat');
             $sortOrder = $request->sort_order ?? 'asc';
-    
-            if ($sortBy === 'pasien.name') {
-                $query->join('users as pasien', 'rekam_medis.pasien_id', '=', 'pasien.id')
-                    ->orderBy('pasien.name', $sortOrder)
-                    ->select('rekam_medis.*');
-            } elseif ($sortBy === 'dokter.user.name') {
-                $query->join('users as dokter_user', 'rekam_medis.dokter_id', '=', 'dokter_user.id')
-                    ->orderBy('dokter_user.name', $sortOrder)
-                    ->select('rekam_medis.*');
+
+            if ($request->sort_by === 'name') {
+                $query->orderBy(User::select('name')
+                    ->whereColumn('users.id', 'rekam_medis.pasien_id'), $sortOrder);
+            } elseif ($request->sort_by === 'dokter') {
+                $query->orderBy(User::select('name')
+                    ->whereColumn('users.id', 'rekam_medis.dokter_id'), $sortOrder);
             } else {
-                $query->orderBy($sortBy, $sortOrder);
+                $query->orderBy('tanggal_berobat', $sortOrder);
             }
+        } else {
+            $query->orderBy('tanggal_berobat', 'asc');
         }
 
         $daftarPasien = $query->get();

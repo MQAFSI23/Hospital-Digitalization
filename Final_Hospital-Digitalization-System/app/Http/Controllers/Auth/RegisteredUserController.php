@@ -38,8 +38,8 @@ class RegisteredUserController extends Controller
             'username' => ['required', 'string', 'max:15', 'unique:users,username', 'alpha_num'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:127', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'berat_badan' => ['required', 'numeric', 'min:0'],
-            'tinggi_badan' => ['required', 'numeric', 'min:0'],
+            'berat_badan' => ['required', 'numeric', 'min:0.1'],
+            'tinggi_badan' => ['required', 'numeric', 'min:20'],
         ]);
 
         $user = User::create([
@@ -85,7 +85,9 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:127', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:admin,dokter,pasien'],
-            'jadwal_tugas' => 'required_if:role,dokter|array',
+            'berat_badan' => ['nullable', 'required_if:role,pasien', 'numeric', 'min:0.1'],
+            'tinggi_badan' => ['nullable', 'required_if:role,pasien', 'numeric', 'min:20'],
+            'jadwal_tugas' => 'nullable|required_if:role,dokter|array',
             'jadwal_tugas.*' => 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
             'jenis_dokter' => 'nullable|required_if:role,dokter|in:umum,spesialis',
             'spesialisasi' => 'nullable|required_if:jenis_dokter,spesialis|in:kardiologi,neurologi,gastroenterologi,pediatri,pulmonologi',
@@ -109,7 +111,13 @@ class RegisteredUserController extends Controller
             'role' => $request->role,
         ]);
 
-        if ($request->role === 'dokter') {
+        if ($request->role === 'pasien') {
+            $user->pasien()->create([
+                'berat_badan' => $request->berat_badan,
+                'tinggi_badan' => $request->tinggi_badan,
+            ]);
+            
+        } elseif ($request->role === 'dokter') {
             $dokter = Dokter::create([
                 'user_id' => $user->id,
                 'jenis_dokter' => $request->jenis_dokter,

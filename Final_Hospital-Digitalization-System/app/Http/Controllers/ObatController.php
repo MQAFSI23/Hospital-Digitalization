@@ -8,6 +8,7 @@ use App\Models\LogObat;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ObatController extends Controller
@@ -159,10 +160,28 @@ class ObatController extends Controller
                 ->with('nothing', 'Tidak ada perubahan yang dilakukan.'); 
         }
 
+        if ($validatedData['nama_obat'] !== $obat->nama_obat && $obat->gambar_obat) {
+            $oldFilePath = public_path('storage/obat_images/' . $obat->gambar_obat);
+            $extension = pathinfo($obat->gambar_obat, PATHINFO_EXTENSION);
+            $newFileName = 'gambar_obat_' . $validatedData['nama_obat'] . '.' . $extension;
+    
+            $newFilePath = public_path('storage/obat_images/' . $newFileName);
+    
+            if (file_exists($oldFilePath)) {
+                rename($oldFilePath, $newFilePath);
+                $validatedData['gambar_obat'] = $newFileName;
+            }
+        }
+
         if ($request->hasFile('gambar_obat')) {
             $file = $request->file('gambar_obat');
             $extension = $file->getClientOriginalExtension();
             $newFileName = 'gambar_obat_' . $obat->nama_obat . '.' . $extension;
+
+            if ($obat->gambar_obat && file_exists(public_path('storage/obat_images/' . $obat->gambar_obat))) {
+                unlink(public_path('storage/obat_images/' . $obat->gambar_obat));
+            }
+
             $file->storeAs('obat_images', $newFileName, 'public');
             $validatedData['gambar_obat'] = $newFileName;
         }
@@ -194,6 +213,10 @@ class ObatController extends Controller
 
         if (!Hash::check($request->password, auth()->user()->password)) {
             return redirect()->route('admin.daftarObat')->with('error', 'Password admin tidak valid. Obat gagal dihapus.');
+        }
+
+        if ($obat->gambar_obat && file_exists(public_path('storage/obat_images/' . $obat->gambar_obat))) {
+            unlink(public_path('storage/obat_images/' . $obat->gambar_obat));
         }
 
         $obat->delete();

@@ -80,8 +80,8 @@
                     <thead class="bg-indigo-600 text-white sticky top-0 z-10">
                         <tr>
                             <th class="py-2 px-4 w-16">No</th>
-                            <th class="py-2 px-4">Nama Dokter</th>
                             <th class="py-2 px-4">Nama Pasien</th>
+                            <th class="py-2 px-4">Nama Dokter</th>
                             <th class="py-2 px-4">Tanggal Pemeriksaan</th>
                         </tr>
                     </thead>
@@ -89,8 +89,8 @@
                         @forelse ($daftarPasien as $index => $rekamMedis)
                             <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 duration-300">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
-                                <td class="py-2 px-4">{{ $rekamMedis->dokter->user->name }}</td>
-                                <td class="py-2 px-4">{{ $rekamMedis->pasien->name }}</td>
+                                <td class="py-2 px-4">{{ $rekamMedis->pasien->user->name ?? '-' }}</td>
+                                <td class="py-2 px-4">{{ $rekamMedis->dokter->user->name ?? '-' }}</td>
                                 <td class="py-2 px-4">
                                     {{ $rekamMedis->tanggal_berobat ? Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') : '-' }}
                                 </td>

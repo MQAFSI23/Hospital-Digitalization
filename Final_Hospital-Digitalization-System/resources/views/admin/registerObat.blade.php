@@ -62,7 +62,7 @@
 
             <!-- Gambar Obat -->
             <div class="w-full mt-6">
-                <x-input-label for="gambar_obat" :value="__('Gambar Obat')" />
+                <x-input-label for="gambar_obat" :value="__('Gambar Obat (opsional)')" />
                 <input type="file" id="gambar_obat" name="gambar_obat" class="w-full bg-transparent border-b-2" />
             </div>
             @error('gambar_obat')

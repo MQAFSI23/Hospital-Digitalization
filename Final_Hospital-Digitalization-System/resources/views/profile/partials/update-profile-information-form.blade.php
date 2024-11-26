@@ -43,6 +43,22 @@
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
+        @if ($user->role === 'pasien')
+            <!-- Berat badan (Editable) -->
+            <div>
+                <x-input-label for="berat_badan" :value="__('Berat Badan (kg)')" />
+                <input id="berat_badan" name="berat_badan" type="number" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-4" value="{{ old('berat_badan', $user->pasien->berat_badan) }}" required autofocus autocomplete="off" step="0.1" />
+                <x-input-error class="mt-2" :messages="$errors->get('berat_badan')" />
+            </div>
+
+            <!-- Tinggi badan (Editable) -->
+            <div>
+                <x-input-label for="tinggi_badan" :value="__('Tinggi Badan (cm)')" />
+                <input id="tinggi_badan" name="tinggi_badan" type="number" class="relative w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-4" value="{{ old('tinggi_badan', $user->pasien->tinggi_badan) }}" required autofocus autocomplete="off" step="0.1" />
+                <x-input-error class="mt-2" :messages="$errors->get('tinggi_badan')" />
+            </div>
+        @endif
+
         <!-- Email (Editable) -->
         <div>
             <x-input-label for="email" :value="__('Email')" />

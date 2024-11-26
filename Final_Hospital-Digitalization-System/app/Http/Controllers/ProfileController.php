@@ -16,9 +16,8 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('partials.edit-profile', [
-            'user' => $request->user(),
-        ]);
+        $user = $request->user()->load('pasien');
+        return view('partials.edit-profile', compact('user'));
     }
 
     /**
@@ -26,16 +25,34 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user = $request->user()->load('pasien');
+        $user->fill($request->validated());
+    
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
-
-        $request->user()->save();
-
+    
+        $user->save();
+    
+        if ($user->role === 'pasien') {
+            $validated = $request->validated();
+            $pasien = $user->pasien;
+            
+            if ($pasien) {
+                $pasien->update([
+                    'berat_badan' => $validated['berat_badan'] ?? $pasien->berat_badan,
+                    'tinggi_badan' => $validated['tinggi_badan'] ?? $pasien->tinggi_badan,
+                ]);
+            } else {
+                $user->pasien()->create([
+                    'berat_badan' => $validated['berat_badan'],
+                    'tinggi_badan' => $validated['tinggi_badan'],
+                ]);
+            }
+        }
+    
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
+    }    
 
     /**
      * Delete the user's account.

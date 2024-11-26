@@ -56,11 +56,11 @@
                     @elseif ($label === 'Jenis Kelamin' && $user->role === 'pasien')
                         <div class="flex flex-wrap justify-between items-center border-b border-gray-200 py-2">
                             <h3 class="font-semibold text-gray-600 text-sm md:text-base w-full md:w-1/3">Berat Badan</h3>
-                            <p class="text-gray-800 text-base md:text-lg w-full md:w-2/3 text-left md:text-right">{{ ucfirst($user->pasien->berat_badan) . ' kg' ?? 'Belum diisi' }}</p>
+                            <p class="text-gray-800 text-base md:text-lg w-full md:w-2/3 text-left md:text-right">{{ number_format($user->pasien->berat_badan, 1, ',', '.') . ' kg' ?? 'Belum diisi' }}</p>
                         </div>
                         <div class="flex flex-wrap justify-between items-center border-b border-gray-200 py-2">
                             <h3 class="font-semibold text-gray-600 text-sm md:text-base w-full md:w-1/3">Tinggi Badan</h3>
-                            <p class="text-gray-800 text-base md:text-lg w-full md:w-2/3 text-left md:text-right">{{ ucfirst($user->pasien->tinggi_badan) . ' cm' ?? 'Belum diisi' }}</p>
+                            <p class="text-gray-800 text-base md:text-lg w-full md:w-2/3 text-left md:text-right">{{ number_format($user->pasien->tinggi_badan, 1, ',', '.') . ' cm' ?? 'Belum diisi' }}</p>
                         </div>
                     @endif
                 @endforeach

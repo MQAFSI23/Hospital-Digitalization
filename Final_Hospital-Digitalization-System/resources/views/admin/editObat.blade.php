@@ -63,10 +63,22 @@
             @enderror
 
             <!-- Gambar Obat -->
-            <div class="w-full mt-6">
+            <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
                 <x-input-label for="gambar_obat" :value="__('Gambar Obat (Opsional)')" />
+
+                <!-- Tampilkan preview jika file obat sudah ada -->
+                @if ($obat->gambar_obat)
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-700">File saat ini:</p>
+                        <a class="text-sm text-indigo-500">
+                            {{ $obat->gambar_obat }}
+                        </a>
+                    </div>
+                @endif
+
                 <input type="file" id="gambar_obat" name="gambar_obat"
-                    class="w-full border-none bg-transparent outline-none focus:outline-none">
+                    class="w-full border-none bg-transparent outline-none focus:outline-none"
+                    value="{{ old('gambar_obat', $obat->gambar_obat) }}">
             </div>
             @error('gambar_obat')
                 <div class="text-red-600 text-sm mt-2">{{ $message }}</div>

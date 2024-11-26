@@ -98,14 +98,6 @@
             </div>
         </div>
 
-        <!-- Register User Baru -->
-        <div class="mt-8 flex justify-center sm:justify-start">
-            <a href="{{ route('register-admin') }}" 
-                class="w-full sm:w-auto max-w-xs sm:max-w-none bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-center">
-                Register Pengguna Baru
-            </a>
-        </div>
-
         <!-- Tabel Pengguna Terbaru -->
         <div class="max-h-80 overflow-hidden bg-white p-6 rounded shadow-lg mt-8">
             <h2 class="text-xl font-semibold text-gray-800">Pengguna Baru (Sebulan Terakhir): {{ $jumlahPenggunaTerbaru }}</h2>

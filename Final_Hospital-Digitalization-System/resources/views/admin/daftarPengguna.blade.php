@@ -10,6 +10,14 @@
     <div class="py-10">
         <h1 class="text-3xl font-bold text-gray-800">Daftar Pengguna</h1>
 
+        <!-- Register User Baru -->
+        <div class="mt-8 flex justify-center sm:justify-start">
+            <a href="{{ route('register-admin') }}" 
+                class="w-full sm:w-auto max-w-xs sm:max-w-none bg-indigo-500 duration-300 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-center">
+                Register Pengguna Baru
+            </a>
+        </div>
+
         <!-- Filter Form -->
         <form action="{{ route('admin.daftarPengguna') }}" method="GET" class="mt-8">
             @csrf
