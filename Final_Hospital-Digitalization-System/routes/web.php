@@ -82,6 +82,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Riwayat Pemeriksaan
         Route::get('/admin/riwayat-periksa', [AdminController::class, 'riwayatPeriksa'])
             ->name('admin.riwayatPeriksa');
+
+        Route::get('/admin/detail-riwayat-periksa/{id}', [AdminController::class, 'detailRiwayatPeriksa'])
+            ->name('admin.detailRiwayatPeriksa');
+
+        // Status Pengambilan Obat
+        Route::patch('/admin/riwayat-periksa/{rekamMedis}/update-resep', [AdminController::class, 'updateResepStatus'])
+            ->name('admin.updateResepStatus');
+
     });
 
     // Dokter Routes
@@ -97,6 +105,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/dokter/rekam-medis/{id}', [DokterController::class, 'detailRekamMedis'])
             ->name('dokter.detailRekamMedis');
+
+        Route::post('/dokter/selesai/{id}', [DokterController::class, 'selesai'])
+            ->name('dokter.selesai');
     });
 
     // Pasien Routes

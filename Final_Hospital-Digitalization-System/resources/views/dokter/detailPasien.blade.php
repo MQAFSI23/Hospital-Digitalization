@@ -16,16 +16,16 @@
         <div class="mt-4">
             <div class="grid grid-cols-3 gap-2 text-sm md:text-base">
                 <p class="font-medium text-gray-600">Nama</p>
-                <p class="col-span-2 text-gray-800">: {{ $pasien->name }}</p>
+                <p class="col-span-2 text-gray-800">: {{ $pasien->user->name }}</p>
 
                 <p class="font-medium text-gray-600">Tanggal Lahir</p>
                 <p class="col-span-2 text-gray-800">:
-                    {{ Carbon::parse($pasien->tanggal_lahir)->format('d-m-Y') }}
-                    ({{ Carbon::parse($pasien->tanggal_lahir)->age }} tahun)
+                    {{ Carbon::parse($pasien->user->tanggal_lahir)->format('d-m-Y') }}
+                    ({{ Carbon::parse($pasien->user->tanggal_lahir)->age }} tahun)
                 </p>
 
                 <p class="font-medium text-gray-600">Jenis Kelamin</p>
-                <p class="col-span-2 text-gray-800">: {{ ucfirst($pasien->jenis_kelamin) }}</p>
+                <p class="col-span-2 text-gray-800">: {{ ucfirst($pasien->user->jenis_kelamin) }}</p>
             </div>
         </div>
     </div>

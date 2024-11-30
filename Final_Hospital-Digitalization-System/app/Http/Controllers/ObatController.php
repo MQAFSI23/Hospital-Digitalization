@@ -258,6 +258,8 @@ class ObatController extends Controller
             } else {
                 $query->orderBy($sortBy, $sortOrder);
             }
+        } else {
+            $query->orderBy('tanggal_log', 'desc');
         }
 
         $logObat = $query->with('obat')->get();

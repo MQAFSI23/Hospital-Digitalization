@@ -101,8 +101,8 @@
                             <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} cursor-pointer hover:bg-indigo-100 duration-300"
                                 onclick="window.location='{{ route('dokter.detailPasien', $rekamMedis->pasien->id) }}';">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
-                                <td class="py-2 px-4">{{ $rekamMedis->pasien->name }}</td>
-                                <td class="py-2 px-4">{{ $rekamMedis->pasien->email }}</td>
+                                <td class="py-2 px-4">{{ $rekamMedis->pasien->user->name }}</td>
+                                <td class="py-2 px-4">{{ $rekamMedis->pasien->user->email }}</td>
                                 <td class="py-2 px-4">
                                     {{ $rekamMedis->tanggal_berobat ? Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') : '-' }}
                                 </td>

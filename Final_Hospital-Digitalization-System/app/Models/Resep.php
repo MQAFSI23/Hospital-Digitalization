@@ -18,6 +18,7 @@ class Resep extends Model
         'jumlah',
         'aturan_pakai',
         'keterangan',
+        'status_pengambilan',
         'created_by',
     ];
 

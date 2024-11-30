@@ -16,7 +16,7 @@
         <div class="mt-4">
             <div class="grid grid-cols-3 gap-2 text-sm md:text-base">
                 <p class="font-medium text-gray-600">Pasien</p>
-                <p class="col-span-2 text-gray-800">: {{ $rekamMedis->pasien->name }}</p>
+                <p class="col-span-2 text-gray-800">: {{ $rekamMedis->pasien->user->name }}</p>
 
                 <p class="font-medium text-gray-600">Tindakan</p>
                 <p class="col-span-2 text-gray-800">: {{ $rekamMedis->tindakan }}</p>
@@ -34,21 +34,25 @@
     <div class="mt-6 bg-white p-6 rounded shadow-lg">
         <h2 class="text-xl font-semibold text-gray-800">Obat yang Diberikan</h2>
         <div class="mt-4">
-            @if ($rekamMedis->obats->isNotEmpty())
-                <table class="w-full border border-gray-300 rounded text-sm md:text-base">
+            @if ($rekamMedis->resep->isNotEmpty())
+                <table class="w-full border border-gray-300 rounded text-sm md:text-base text-center">
                     <thead>
                         <tr class="bg-indigo-600">
-                            <th class="border px-4 py-2 text-left text-white">Nama Obat</th>
-                            <th class="border px-4 py-2 text-left text-white">Tipe Obat</th>
-                            <th class="border px-4 py-2 text-left text-white">Deskripsi</th>
+                            <th class="border px-4 py-2 text-white">Nama Obat</th>
+                            <th class="border px-4 py-2 text-white">Tipe Obat</th>
+                            <th class="border px-4 py-2 text-white">Jumlah</th>
+                            <th class="border px-4 py-2 text-white">Dosis</th>
+                            <th class="border px-4 py-2 text-white">Aturan Pemakaian</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($rekamMedis->obats as $obat)
+                        @foreach ($rekamMedis->resep as $resep)
                             <tr>
-                                <td class="border px-4 py-2 text-gray-800">{{ $obat->nama_obat }}</td>
-                                <td class="border px-4 py-2 text-gray-800 capitalize">{{ $obat->tipe_obat }}</td>
-                                <td class="border px-4 py-2 text-gray-800">{{ $obat->deskripsi }}</td>
+                                <td class="border px-4 py-2 text-gray-800">{{ $resep->obat->nama_obat ?? '-' }}</td>
+                                <td class="border px-4 py-2 text-gray-800 capitalize">{{ $resep->obat->tipe_obat ?? '-' }}</td>
+                                <td class="border px-4 py-2 text-gray-800">{{ $resep->jumlah ?? '-' }}</td>
+                                <td class="border px-4 py-2 text-gray-800">{{ $resep->dosis ?? '-' }}</td>
+                                <td class="border px-4 py-2 text-gray-800">{{ $resep->aturan_pakai ?? '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>

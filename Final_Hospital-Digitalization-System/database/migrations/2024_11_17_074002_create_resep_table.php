@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('dosis', 100);
             $table->integer('jumlah');
             $table->string('aturan_pakai', 100)->nullable();
-            $table->text('keterangan')->nullable();
+            $table->boolean('status_pengambilan')->default(false);
             $table->foreignId('created_by')->nullable()->constrained('dokter')->onDelete('set null');
             $table->timestamps();
         });

@@ -32,6 +32,11 @@ class Pasien extends Model
         return $this->hasMany(RekamMedis::class, 'pasien_id');
     }
 
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class, 'pasien_id');
+    }
+
     public function feedbackPasien()
     {
         return $this->hasMany(Feedback::class, 'pasien_id');

@@ -27,6 +27,11 @@ class Dokter extends Model
         return $this->hasMany(JadwalTugas::class, 'dokter_id');
     }
 
+    public function cuti()
+    {
+        return $this->hasMany(CutiDokter::class, 'dokter_id');
+    }
+
     public function resepDibuat()
     {
         return $this->hasMany(Resep::class, 'created_by');

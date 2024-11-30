@@ -20,7 +20,6 @@ class ResepFactory extends Factory
             'dosis' => '3x sehari',
             'jumlah' => 7,
             'aturan_pakai' => 'Setelah makan',
-            'keterangan' => $this->faker->sentence(),
             'created_by' => Dokter::factory(),
         ];
     }

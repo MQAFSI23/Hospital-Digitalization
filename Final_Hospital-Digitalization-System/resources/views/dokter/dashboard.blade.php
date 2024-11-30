@@ -36,11 +36,19 @@
                     @if($jadwalDokter && $jadwalDokter->count() > 0)
                         {{ implode(', ', $jadwalDokter->pluck('hari_tugas')->toArray()) }}
                     @else
-                        Belum ada jadwal tugas untuk hari ini.
+                        Belum ada hari tugas.
                     @endif
                 </p>
             </div>
         </div>
+    </div>
+
+    <div class="mt-4">
+        @if (session('status'))
+            <div class="p-4 mb-4 text-sm text-green-500 bg-green-100 rounded" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
     </div>
 
     <!-- Daftar Pasien yang Akan Diperiksa -->
@@ -54,6 +62,7 @@
                         <th class="py-2 px-4">Nama Pasien</th>
                         <th class="py-2 px-4">Tindakan</th>
                         <th class="py-2 px-4">Tanggal Konsultasi</th>
+                        <th class="py-2 px-4">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +70,7 @@
                     <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center cursor-pointer"
                         onclick="window.location='{{ route('dokter.detailPasien', $penjadwalan->pasien->id) }}';">
                         <td class="py-2 px-4">{{ $index + 1 }}</td>
-                        <td class="py-2 px-4">{{ $penjadwalan->pasien->name }}</td>
+                        <td class="py-2 px-4">{{ $penjadwalan->pasien->user->name }}</td>
 
                         <!-- Tampilkan rekam medis jika ada -->
                         @if($penjadwalan->rekamMedis)
@@ -71,6 +80,11 @@
                         @endif
 
                         <td class="py-2 px-4">{{ Carbon::parse($penjadwalan->tanggal_konsultasi)->format('d-m-Y') }}</td>
+
+                        <!-- Aksi Selesai -->
+                        <td class="py-2 px-4" onclick="event.stopPropagation();">
+                            <button onclick="openModal({{ $penjadwalan->id }});" class="bg-green-500 text-white px-4 py-2 rounded">Selesai</button>
+                        </td>
                     </tr>
                 @empty
                     <tr>
@@ -117,4 +131,5 @@
     </div>
 
 </div>
+
 @endsection

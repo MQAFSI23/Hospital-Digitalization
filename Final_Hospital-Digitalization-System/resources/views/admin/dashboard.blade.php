@@ -84,8 +84,8 @@
                             <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 cursor-pointer"
                                 onclick="window.location='{{ route('admin.detailPengguna', $pasient->pasien->id) }}';">
                                 <td class="py-2 px-4">{{ $index + 1 }}</td>
-                                <td class="py-2 px-4">{{ $pasient->pasien->name }}</td>
-                                <td class="py-2 px-4">{{ $pasient->pasien->email }}</td>
+                                <td class="py-2 px-4">{{ $pasient->pasien->user->name }}</td>
+                                <td class="py-2 px-4">{{ $pasient->pasien->user->email }}</td>
                                 <td class="py-2 px-4">{{ $pasient->dokter->user->name }}</td>
                             </tr>
                         @empty

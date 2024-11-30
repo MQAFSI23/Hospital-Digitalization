@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JadwalTugas;
 use App\Models\User;
+use App\Models\LogObat;
 use App\Models\Pasien;
 use App\Models\Dokter;
 use App\Models\RekamMedis;
@@ -23,7 +24,7 @@ class AdminController extends Controller
             ->get();
         $jumlahDokterBertugas = JadwalTugas::where('hari_tugas', Carbon::now()->isoFormat('dddd'))->count();
 
-        $pasienHariIni = PenjadwalanKonsultasi::with(['pasien', 'pasien.dokter.user'])
+        $pasienHariIni = PenjadwalanKonsultasi::with(['pasien', 'dokter'])
             ->whereDate('tanggal_konsultasi', Carbon::today())
             ->get();
         $jumlahPasienHariIni = $pasienHariIni->count();
@@ -286,5 +287,36 @@ class AdminController extends Controller
 
         return view('admin.riwayatPeriksa', compact('daftarPasien'));
     }
+
+    public function detailRiwayatPeriksa($id)
+    {
+        $rekamMedis = RekamMedis::with(['pasien', 'dokter', 'resep.obat'])->findOrFail($id);
+    
+        return view('admin.detailRiwayatPeriksa', compact('rekamMedis'));
+    }    
+
+    public function updateResepStatus($rekamMedisId)
+    {
+        $rekamMedis = RekamMedis::with('resep')->findOrFail($rekamMedisId);
+    
+        foreach ($rekamMedis->resep as $resep) {
+            $resep->update(['status_pengambilan' => true]);
+        }
+
+        foreach ($rekamMedis->resep as $resep) {
+            LogObat::create([
+                'obat_id' => $resep->obat_id,
+                'status' => 'terjual',
+                'jumlah' => $resep->jumlah,
+                'tanggal_log' => now(),
+            ]);
+        
+            $obat = $resep->obat;
+            $obat->stok -= $resep->jumlah;
+            $obat->save();
+        }                
+    
+        return redirect()->route('admin.riwayatPeriksa')->with('status', 'Resep berhasil ditandai selesai.');
+    }    
     
 }
