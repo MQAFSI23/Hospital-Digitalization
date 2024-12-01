@@ -73,8 +73,8 @@
                         <td class="py-2 px-4">{{ $penjadwalan->pasien->user->name }}</td>
 
                         <!-- Tampilkan rekam medis jika ada -->
-                        @if($penjadwalan->rekamMedis)
-                            <td class="py-2 px-4">{{ $penjadwalan->rekamMedis->tindakan ?? 'Belum ada tindakan' }}</td>
+                        @if($penjadwalan->pasien->rekamMedisPasien)
+                            <td class="py-2 px-4">{{ $penjadwalan->pasien->rekamMedisPasien->first()->tindakan ?? 'Belum ada tindakan' }}</td>
                         @else
                             <td class="py-2 px-4">Rekam medis belum ada</td>
                         @endif
@@ -83,7 +83,7 @@
 
                         <!-- Aksi Selesai -->
                         <td class="py-2 px-4" onclick="event.stopPropagation();">
-                            <button onclick="openModal({{ $penjadwalan->id }});" class="bg-green-500 text-white px-4 py-2 rounded">Selesai</button>
+                            <a href="{{ route('dokter.selesaiKonsultasi', $penjadwalan->id) }}" class="bg-green-500 text-white px-4 py-2 rounded">Selesai</a>
                         </td>
                     </tr>
                 @empty
@@ -115,7 +115,7 @@
                         <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center cursor-pointer"
                             onclick="window.location='{{ route('dokter.detailPasien', $rekamMedis->pasien->id) }}';">
                             <td class="py-2 px-4">{{ $index + 1 }}</td>
-                            <td class="py-2 px-4">{{ $rekamMedis->pasien->name }}</td>
+                            <td class="py-2 px-4">{{ $rekamMedis->pasien->user->name }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->diagnosa }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->tindakan }}</td>
                             <td class="py-2 px-4">{{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</td>

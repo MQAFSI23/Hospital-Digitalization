@@ -6,11 +6,11 @@
     <div class="flex justify-center mt-12">
         <div class="w-full max-w-md px-6 py-8 bg-white shadow-md rounded-lg space-y-6">
             <div class="text-center text-2xl font-semibold text-gray-800">
-                {{ __('Forgot your password?') }}
+                {{ __('Lupa password?') }}
             </div>
             
             <div class="mb-4 text-sm text-gray-600">
-                {{ __('No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+                {{ __('Tidak masalah. Cukup beri tahu kami alamat email Anda dan kami akan mengirimkan tautan pengaturan ulang password melalui email yang memungkinkan Anda memilih password baru.') }}
             </div>
 
             <!-- Session Status -->
@@ -27,11 +27,11 @@
 
                 <div class="flex items-center justify-between mt-6">
                     <a href="{{ route('login') }}" class="text-sm font-medium text-indigo-500 hover:underline transition-all duration-300">
-                        {{ __('Back to Login') }}
+                        {{ __('Kembali ke Login') }}
                     </a>
 
                     <x-primary-button>
-                        {{ __('Email Password Reset Link') }}
+                        {{ __('Kirim Tautan Reset Password') }}
                     </x-primary-button>
                 </div>
             </form>

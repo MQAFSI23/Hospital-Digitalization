@@ -4,11 +4,11 @@
     use \Carbon\Carbon;
 @endphp
 
-@section('title', 'Detail Riwayat Pemeriksaan Pasien')
+@section('title', 'Detail Rekam Medis')
 
 @section('content')
     <div class="py-10">
-        <h1 class="text-3xl font-bold text-gray-800">Detail Riwayat Pemeriksaan Pasien</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Detail Rekam Medis</h1>
 
         <!-- Detail Riwayat -->
         <div class="mt-8 bg-white p-6 rounded shadow-lg">
@@ -31,9 +31,13 @@
                     <p class="col-span-2 text-gray-800">: {{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</p>
 
                     <p class="font-medium text-gray-600">Status Pengambilan Obat</p>
-                    <p class="col-span-2 text-gray-800">
-                        : {{ $rekamMedis->resep->every('status_pengambilan') ? 'Selesai' : 'Belum Selesai' }}
-                    </p>
+                    @if ($rekamMedis->resep->isNotEmpty())
+                        <p class="col-span-2 text-gray-800">
+                            : {{ $rekamMedis->resep->every('status_pengambilan') ? 'Selesai' : 'Belum Selesai' }}
+                        </p>
+                    @else
+                        <p class="col-span-2 text-gray-800">: Tidak perlu obat</p>
+                    @endif
                 </div>
             </div>
         </div>
@@ -43,13 +47,14 @@
             <h2 class="text-xl font-semibold text-gray-800">Obat yang Diberikan</h2>
             <div class="mt-4">
                 @if ($rekamMedis->resep->isNotEmpty())
-                    <table class="w-full border border-gray-300 rounded text-sm md:text-base">
+                    <table class="w-full border border-gray-300 rounded text-sm md:text-base text-center">
                         <thead>
                             <tr class="bg-indigo-600">
-                                <th class="border px-4 py-2 text-left text-white">Nama Obat</th>
-                                <th class="border px-4 py-2 text-left text-white">Tipe Obat</th>
-                                <th class="border px-4 py-2 text-left text-white">Jumlah</th>
-                                <th class="border px-4 py-2 text-left text-white">Deskripsi</th>
+                                <th class="border px-4 py-2 text-white">Nama Obat</th>
+                                <th class="border px-4 py-2 text-white">Tipe Obat</th>
+                                <th class="border px-4 py-2 text-white">Jumlah</th>
+                                <th class="border px-4 py-2 text-white">Dosis</th>
+                                <th class="border px-4 py-2 text-white">Aturan Pakai</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,7 +63,8 @@
                                     <td class="border px-4 py-2 text-gray-800">{{ $resep->obat->nama_obat ?? '-' }}</td>
                                     <td class="border px-4 py-2 text-gray-800 capitalize">{{ $resep->obat->tipe_obat ?? '-' }}</td>
                                     <td class="border px-4 py-2 text-gray-800">{{ $resep->jumlah ?? '-' }}</td>
-                                    <td class="border px-4 py-2 text-gray-800">{{ $resep->obat->deskripsi ?? '-' }}</td>
+                                    <td class="border px-4 py-2 text-gray-800">{{ $resep->dosis ?? '-' }}</td>
+                                    <td class="border px-4 py-2 text-gray-800">{{ $resep->aturan_pakai ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -91,7 +97,7 @@
         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
             <h2 class="text-xl font-semibold mb-4 text-gray-800">Konfirmasi Penyelesaian</h2>
-            <p class="text-gray-700">Apakah Anda yakin ingin menandai status pengambilan obat sebagai selesai?</p>
+            <p class="text-gray-700">Apakah Anda yakin ingin menandai status pengambilan obat ini sebagai selesai?</p>
             <div class="mt-6 flex justify-end gap-2">
                 <form action="{{ route('admin.updateResepStatus', $rekamMedis->id) }}" method="POST">
                     @csrf

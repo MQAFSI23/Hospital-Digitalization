@@ -100,7 +100,7 @@
 
         <!-- Tabel Pengguna Terbaru -->
         <div class="max-h-80 overflow-hidden bg-white p-6 rounded shadow-lg mt-8">
-            <h2 class="text-xl font-semibold text-gray-800">Pengguna Baru (Sebulan Terakhir): {{ $jumlahPenggunaTerbaru }}</h2>
+            <h2 class="text-xl font-semibold text-gray-800">Pengguna Baru (30 Hari Terakhir): {{ $jumlahPenggunaTerbaru }}</h2>
             <div class="overflow-y-auto overflow-x-auto max-h-60 mt-2">
                 <table class="min-w-full border-collapse table-fixed">
                     <thead class="bg-indigo-600 text-white sticky top-0 z-10">

@@ -22,7 +22,7 @@
 
         <!-- Email Address or Username -->
         <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
-            <input type="text" id="user_id" name="user_id" placeholder="Email or Username"
+            <input type="text" id="user_id" name="user_id" placeholder="Email atau Username"
                 class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
                 value="{{ old('user_id') ?? '' }}" required autofocus autocomplete="off">
         </div>
@@ -49,7 +49,7 @@
         <div class="block mt-6">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ml-2 text-sm text-gray-400">{{ __('Remember me') }}</span>
+                <span class="ml-2 text-sm text-gray-400">{{ __('Ingat saya') }}</span>
             </label>
         </div>
 
@@ -57,20 +57,20 @@
         <div class="flex items-center justify-between mt-8">
             @if (Route::has('password.request'))
                 <a class="text-sm text-indigo-500 hover:underline transition-all duration-300" href="{{ route('password.request') }}">
-                    Forgot your password?
+                    Lupa password?
                 </a>
             @endif
 
             <button type="submit" id="loginForm" class="transform rounded-sm bg-indigo-500 py-2 px-2 font-bold duration-300 hover:bg-indigo-700">
-                LOG IN
+                Masuk
             </button>
         </div>
     </form>
 
     <!-- Create Account Link -->
     <p class="text-center text-lg mt-6">
-        No account?
-        <a href="{{ route('register') }}" class="font-medium text-indigo-500 underline-offset-4 hover:underline">Create One</a>
+        Tidak punya akun?
+        <a href="{{ route('register') }}" class="font-medium text-indigo-500 underline-offset-4 hover:underline">Buat Akun</a>
     </p>
 
     <div class="text-transparent text-center" id="a">

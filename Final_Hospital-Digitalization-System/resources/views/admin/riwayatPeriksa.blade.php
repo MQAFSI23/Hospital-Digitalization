@@ -1,6 +1,6 @@
 @extends('layouts.app2')
 
-@section('title', 'Riwayat Pemeriksaan')
+@section('title', 'Rekam Medis')
 
 @php
     use Carbon\Carbon;
@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="py-10">
-        <h1 class="text-3xl font-bold text-gray-800">Daftar Pasien yang Telah Diperiksa</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Daftar Rekam Medis</h1>
 
         <!-- Filter Form -->
         <form action="{{ route('admin.riwayatPeriksa') }}" method="GET" class="mt-8">
@@ -105,24 +105,29 @@
                                 <td class="py-2 px-4">
                                     {{ $rekamMedis->tanggal_berobat ? Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') : '-' }}
                                 </td>
-                                <td class="py-2 px-4">
-                                    @php
-                                        $statusPengambilan = $rekamMedis->resep->every('status_pengambilan');
-                                    @endphp
-                                    <span class="{{ $statusPengambilan ? 'text-green-500' : 'text-red-500' }}">
-                                        {{ $statusPengambilan ? 'Selesai' : 'Belum Diambil' }}
-                                    </span>
-                                </td>
-                                <td class="py-2 px-4" onclick="event.stopPropagation();">
-                                    @if (!$statusPengambilan)
-                                        <button data-modal-target="modal-{{ $rekamMedis->id }}" 
-                                            class="bg-indigo-500 hover:bg-indigo-700 text-white py-1 px-4 rounded">
-                                            Selesaikan
-                                        </button>
-                                    @else
-                                        <span class="text-gray-500">Selesai</span>
-                                    @endif
-                                </td>
+                                @if ($rekamMedis->resep->isEmpty())
+                                    <td class="py-2 px-4 text-gray-500">Tidak Perlu Obat</td>
+                                    <td class="py-2 px-4 text-gray-500">-</td>
+                                @else
+                                    <td class="py-2 px-4">
+                                        @php
+                                            $statusPengambilan = $rekamMedis->resep->every('status_pengambilan');
+                                        @endphp
+                                        <span class="{{ $statusPengambilan ? 'text-green-500' : 'text-red-500' }}">
+                                            {{ $statusPengambilan ? 'Selesai' : 'Belum Diambil' }}
+                                        </span>
+                                    </td>
+                                    <td class="py-2 px-4" onclick="event.stopPropagation();">
+                                        @if (!$statusPengambilan)
+                                            <button data-modal-target="modal-{{ $rekamMedis->id }}" 
+                                                class="bg-indigo-500 hover:bg-indigo-700 text-white py-1 px-4 rounded duration-300">
+                                                Selesaikan
+                                            </button>
+                                        @else
+                                            <span class="text-gray-500">Selesai</span>
+                                        @endif
+                                    </td>
+                                @endif
                             </tr>
 
                             <!-- Modal -->
@@ -130,7 +135,7 @@
                                 class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
                                 <div class="bg-white rounded-lg shadow-lg p-6">
                                     <h2 class="text-xl font-semibold mb-4">Konfirmasi</h2>
-                                    <p>Apakah Anda yakin ingin menandai semua resep sebagai selesai?</p>
+                                    <p>Apakah Anda yakin ingin menandai status pengambilan obat ini sebagai selesai?</p>
                                     <div class="flex justify-end mt-6">
                                         <form action="{{ route('admin.updateResepStatus', $rekamMedis->id) }}" method="POST">
                                             @csrf

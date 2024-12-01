@@ -120,7 +120,7 @@
             <div class="flex items-center justify-between mt-8">
                 <!-- Link Already Registered -->
                 <a class="text-sm font-medium text-indigo-500 hover:underline transition-all duration-300" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
+                    {{ __('Sudah punya akun?') }}
                 </a>
 
                 <!-- Register Button -->

@@ -106,8 +106,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dokter/rekam-medis/{id}', [DokterController::class, 'detailRekamMedis'])
             ->name('dokter.detailRekamMedis');
 
-        Route::post('/dokter/selesai/{id}', [DokterController::class, 'selesai'])
-            ->name('dokter.selesai');
+        Route::get('/dokter/selesai/{penjadwalan}', [DokterController::class, 'selesaiKonsultasi'])
+            ->name('dokter.selesaiKonsultasi');
+        
+        Route::post('/dokter/selesai/{penjadwalan}', [DokterController::class, 'selesaiStore'])
+            ->name('dokter.selesaiStore');
+        
+        Route::delete('/rekam-medis/{rekamMedis}', [DokterController::class, 'destroy'])
+            ->name('rekamMedis.destroy');
     });
 
     // Pasien Routes

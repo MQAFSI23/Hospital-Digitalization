@@ -41,6 +41,7 @@
                         <th class="py-2 px-4">Tindakan</th>
                         <th class="py-2 px-4">Diagnosa</th>
                         <th class="py-2 px-4">Tanggal</th>
+                        <th class="py-2 px-4">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +52,12 @@
                             <td class="py-2 px-4">{{ $rekamMedis->tindakan }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->diagnosa }}</td>
                             <td class="py-2 px-4">{{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</td>
+                            <td onclick="event.stopPropagation();">
+                                <a onclick="openDeleteModal({{ $rekamMedis->id }})" 
+                                        class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded duration-300">
+                                    Hapus
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -62,12 +69,47 @@
         </div>
     </div>
 
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Konfirmasi Hapus</h3>
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus rekam medis ini?</p>
+            <form id="deleteForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-end space-x-4">
+                    <button type="submit"
+                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 duration-300">
+                        Hapus
+                    </button>
+                    <button type="button" onclick="closeDeleteModal()"
+                            class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-700 duration-300">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="mt-6">
         <a href="{{ route('dokter.daftarPasien') }}" 
-            class="bg-indigo-500 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+            class="bg-indigo-500 hover:bg-indigo-700 text-white px-4 py-2 rounded duration-300">
             Kembali
         </a>
     </div>
 
 </div>
+
+<script>
+    function openDeleteModal(rekamMedisId) {
+        const modal = document.getElementById('deleteModal');
+        const form = document.getElementById('deleteForm');
+        form.action = `/rekam-medis/${rekamMedisId}`;
+        modal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('hidden');
+    }
+</script>
 @endsection

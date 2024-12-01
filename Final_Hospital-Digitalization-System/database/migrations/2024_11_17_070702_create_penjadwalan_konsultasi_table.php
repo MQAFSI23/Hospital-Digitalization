@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('penjadwalan_konsultasi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pasien_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('pasien_id')->constrained('pasien')->onDelete('cascade');
             $table->foreignId('dokter_id')->constrained('dokter')->onDelete('cascade');
             $table->enum('status', ['selesai', 'belum'])->default('belum');
             $table->date('tanggal_konsultasi');
