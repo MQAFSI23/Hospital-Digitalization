@@ -45,4 +45,13 @@ class Resep extends Model
     {
         return $this->belongsTo(Dokter::class, 'created_by');
     }
+
+    /**
+     * Notifikasi yang berkaitan dengan resep.
+     */
+    public function notifikasi()
+    {
+        return $this->belongsToMany(Notifikasi::class, 'notifikasi_resep');
+    }    
+
 }

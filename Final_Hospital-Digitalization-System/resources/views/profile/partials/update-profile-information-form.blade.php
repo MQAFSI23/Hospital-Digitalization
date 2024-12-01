@@ -85,7 +85,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button class="bg-indigo-500 hover:bg-indigo-700 rounded duration-300">{{ __('Simpan') }}</x-primary-button>
+            <x-primary-button class="!bg-indigo-500 hover:!bg-indigo-700 !rounded !duration-300">{{ __('Simpan') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p

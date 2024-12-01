@@ -21,7 +21,7 @@ class DokterController extends Controller
         $pasienSelesai = RekamMedis::with('pasien')
             ->where('dokter_id', $dokterId)
             ->whereDate('tanggal_berobat', Carbon::today())
-            // ->whereIn(DB::raw('DAYOFWEEK(tanggal_berobat)'), $this->getHariTugasAsDayOfWeek($jadwalDokter))
+            ->whereIn(DB::raw('DAYOFWEEK(tanggal_berobat)'), $this->getHariTugasAsDayOfWeek($jadwalDokter))
             ->get();
 
         $totalPasienSelesai = $pasienSelesai->count();
@@ -30,7 +30,7 @@ class DokterController extends Controller
             ->where('status', 'belum')
             ->where('dokter_id', $dokterId)
             ->whereDate('tanggal_konsultasi', Carbon::today())
-            // ->whereIn(DB::raw('DAYOFWEEK(tanggal_konsultasi)'), $this->getHariTugasAsDayOfWeek($jadwalDokter))
+            ->whereIn(DB::raw('DAYOFWEEK(tanggal_konsultasi)'), $this->getHariTugasAsDayOfWeek($jadwalDokter))
             ->get();
     
         $pasienKonsul = $pasienKonsul->map(function ($penjadwalan) {
@@ -79,13 +79,24 @@ class DokterController extends Controller
         $request->validate([
             'tindakan' => 'required|string',
             'diagnosa' => 'required|string',
-            'tanggal_berobat' => 'required|date',
-            'obat_id.*' => 'nullable|exists:obat,id',  
-            'dosis.*' => 'nullable|string',   
-            'jumlah.*' => 'nullable|integer|min:1', 
-            'aturan_pakai.*' => 'nullable|string', 
+            'tanggal_berobat' => 'required|date|before_or_equal:today',
+            'obat_id.*' => 'nullable|exists:obat,id',
+            'dosis.*' => 'nullable|string',
+            'jumlah.*' => 'nullable|integer|min:1',
+            'aturan_pakai.*' => 'nullable|string',
         ]);
-        
+
+        if (!empty($request->obat_id)) {
+            foreach ($request->obat_id as $key => $obatId) {
+                $obat = Obat::find($obatId);
+                if ($request->jumlah[$key] > $obat->stok) {
+                    return back()
+                        ->withErrors(['stok_error' => 'Jumlah obat ' . $obat->nama_obat . ' melebihi stok yang tersedia.'])
+                        ->withInput();
+                }
+            }
+        }
+
         $rekamMedis = RekamMedis::create([
             'pasien_id' => $penjadwalan->pasien_id,
             'dokter_id' => $penjadwalan->dokter_id,
@@ -95,29 +106,30 @@ class DokterController extends Controller
             'created_by' => auth()->user()->dokter->id,
         ]);
 
-        $penjadwalan->status = 'selesai';
-        $penjadwalan->save();
-        
-        if (!empty($request->obat_id)){
+        if (!empty($request->obat_id)) {
+            $resepData = [];
             foreach ($request->obat_id as $key => $obatId) {
-                Resep::create([
+                $resepData[] = [
                     'rekam_medis_id' => $rekamMedis->id,
                     'obat_id' => $obatId,
                     'dosis' => $request->dosis[$key],
                     'jumlah' => $request->jumlah[$key],
                     'aturan_pakai' => $request->aturan_pakai[$key],
-                    'created_by' => auth()->id(),
-                ]);
+                    'created_by' => auth()->user()->dokter->id,
+                ];
             }
-
-            return redirect()->route('dokter.dashboard')->with('status', 'Resep dan diagnosa berhasil disimpan.');
-
-        } else {
-        
-            return redirect()->route('dokter.dashboard')->with('status', 'Diagnosa berhasil disimpan. Tidak ada resep yang diberikan.');
+            Resep::insert($resepData);
         }
 
-    }    
+        $penjadwalan->status = 'selesai';
+        $penjadwalan->save();
+
+        $message = empty($request->obat_id) 
+            ? 'Diagnosa berhasil disimpan. Tidak ada resep yang diberikan.'
+            : 'Resep dan diagnosa berhasil disimpan.';
+        
+        return redirect()->route('dokter.dashboard')->with('status', $message);
+    }
 
     public function daftarPasien(Request $request)
     {

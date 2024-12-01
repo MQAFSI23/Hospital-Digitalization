@@ -317,13 +317,15 @@ class AdminController extends Controller
             $obat->save();
         }                
     
-        Notifikasi::create([
+        $notifikasi = Notifikasi::create([
             'pasien_id' => $rekamMedis->pasien->id,
             'judul' => 'Pengambilan Obat',
             'deskripsi' => 'Obat Anda telah siap diambil.',
             'tanggal' => now(),
             'status' => false, // Belum dibaca
         ]);
+
+        $notifikasi->resep()->attach($rekamMedis->resep->pluck('id')->toArray());
     
         return redirect()->route('admin.riwayatPeriksa')->with('status', 'Obat berhasil ditandai selesai dan notifikasi telah dikirimkan.');
     }    

@@ -12,7 +12,7 @@
 
         <!-- Informasi Notifikasi -->
         <div class="mt-6 bg-white shadow rounded p-6">
-            <h2 class="text-xl font-semibold text-gray-800">{{ $notifikasi->judul }}</h2>
+            <h2 class="text-xl font-semibold text-indigo-700">{{ $notifikasi->judul }}</h2>
             <p class="mt-4 text-gray-600">
                 {{ $notifikasi->deskripsi }} Untuk pasien: <span class="font-semibold">{{ $notifikasi->pasien->user->name }}</span>.
             </p>
@@ -21,26 +21,24 @@
 
         <!-- Informasi Obat Jika Judul "Pengambilan Obat" -->
         @if (strtolower($notifikasi->judul) === 'pengambilan obat')
-            <div class="mt-6 bg-white shadow rounded p-6">
+            <div class="mt-6 bg-white shadow rounded p-4 sm:p-6">
                 <h3 class="text-lg font-semibold text-gray-800">Informasi Obat</h3>
-                @foreach($notifikasi->pasien->rekamMedisPasien as $rekamMedis)
-                    @foreach($rekamMedis->resep as $resep)
-                        <div class="mt-4 grid grid-cols-3 gap-4">
-                            <p class="text-gray-600 font-semibold">Nama Obat</p>
-                            <p class="text-gray-600 col-span-2">: {{ $resep->obat->nama_obat }}</p>
-                            
-                            <p class="text-gray-600 font-semibold">Dosis</p>
-                            <p class="text-gray-600 col-span-2">: {{ $resep->dosis }}</p>
-                            
-                            <p class="text-gray-600 font-semibold">Jumlah</p>
-                            <p class="text-gray-600 col-span-2">: {{ $resep->jumlah }}</p>
-                            
-                            <p class="text-gray-600 font-semibold">Aturan Pakai</p>
-                            <p class="text-gray-600 col-span-2">: {{ $resep->aturan_pakai ?? 'Tidak ada' }}</p>
-                        </div>
-                        <!-- Garis Horizontal Antar Obat -->
-                        <hr class="my-4 border-gray-300">
-                    @endforeach
+                @foreach($notifikasi->resep as $resep)
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-y-2 sm:gap-y-4 sm:gap-x-6">
+                        <p class="text-gray-600 font-semibold">Nama Obat</p>
+                        <p class="text-gray-600 sm:col-span-2">: {{ $resep->obat->nama_obat }}</p>
+                        
+                        <p class="text-gray-600 font-semibold">Dosis</p>
+                        <p class="text-gray-600 sm:col-span-2">: {{ $resep->dosis }}</p>
+                        
+                        <p class="text-gray-600 font-semibold">Jumlah</p>
+                        <p class="text-gray-600 sm:col-span-2">: {{ $resep->jumlah }}</p>
+                        
+                        <p class="text-gray-600 font-semibold">Aturan Pakai</p>
+                        <p class="text-gray-600 sm:col-span-2">: {{ $resep->aturan_pakai ?? 'Tidak ada' }}</p>
+                    </div>
+                    <!-- Garis Horizontal Antar Obat -->
+                    <hr class="my-4 border-indigo-300">
                 @endforeach
             </div>
         @endif

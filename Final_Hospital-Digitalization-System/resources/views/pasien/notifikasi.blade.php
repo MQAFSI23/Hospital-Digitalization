@@ -19,7 +19,7 @@
                             <a href="{{ route('pasien.detailNotifikasi', $notif->id) }}" class="block">
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                                     <div>
-                                        <p class="text-base sm:text-lg font-semibold text-gray-800">
+                                        <p class="text-base sm:text-lg font-semibold text-indigo-700">
                                             {{ $notif->judul }}
                                         </p>
                                         <p class="text-sm text-gray-600 mt-1">
@@ -34,9 +34,10 @@
                             </a>
                         </li>
                     </ul>
+                    <hr class="border-indigo-300">
                 @empty
                     <div class="p-4 text-gray-500 text-center">
-                        Tidak ada notifikasi baru.
+                        Tidak ada notifikasi.
                     </div>
                 @endforelse
             </div>

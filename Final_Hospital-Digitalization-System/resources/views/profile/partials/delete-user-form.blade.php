@@ -10,7 +10,7 @@
     </header>
 
     <x-danger-button
-        class="bg-red-500 hover:bg-red-700 rounded duration-300"
+        class="!bg-red-500 hover:!bg-red-700 !rounded !duration-300"
         x-data=""
         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
     >{{ __('Hapus Akun') }}</x-danger-button>
@@ -48,7 +48,7 @@
                     {{ __('Batal') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ms-3 bg-red-500 hover:bg-red-700 rounded duration-300">
+                <x-danger-button class="ms-3 !bg-red-500 hover:!bg-red-700 !rounded !duration-300">
                     {{ __('Hapus Akun') }}
                 </x-danger-button>
             </div>

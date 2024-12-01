@@ -31,4 +31,12 @@ class Notifikasi extends Model
     {
         return $this->belongsTo(Pasien::class, 'pasien_id');
     }
+
+    /**
+     * Relasi ke model Resep.
+     */
+    public function resep()
+    {
+        return $this->belongsToMany(Resep::class, 'notifikasi_resep');
+    }    
 }

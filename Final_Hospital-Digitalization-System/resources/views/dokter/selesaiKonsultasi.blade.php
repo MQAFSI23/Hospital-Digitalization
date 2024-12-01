@@ -5,10 +5,10 @@
         <!-- Judul Halaman -->
         <div class="text-center text-4xl font-medium">Form Tindakan Pasien</div>
 
-        <!-- Session Status -->
-        @if (session('status'))
-            <div class="mb-4 text-green-500">
-                {{ session('status') }}
+        <!-- Session Error -->
+        @if ($errors->has('stok_error'))
+            <div class="mb-4 text-red-500 text-center">
+                {{ $errors->first('stok_error') }}
             </div>
         @endif
 
@@ -39,8 +39,8 @@
 
             <!-- Tanggal Berobat -->
             <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500 mt-6">
-                <x-input-label for="tanggal_berobat" :value="__('Tanggal Berobat')" />
-                <input type="date" id="tanggal_berobat" name="tanggal_berobat" placeholder="Tanggal Berobat"
+                <x-input-label for="tanggal_berobat" :value="__('Tanggal Konsultasi')" />
+                <input type="date" id="tanggal_berobat" name="tanggal_berobat" placeholder="Tanggal Konsultasi"
                     class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
                     value="{{ old('tanggal_berobat') }}" required>
             </div>
@@ -50,6 +50,44 @@
 
             <!-- Obat Section -->
             <div id="obatSection">
+                @if (old('obat_id'))
+                    @foreach (old('obat_id') as $key => $obatId)
+                        <div class="mt-6">
+                            <x-input-label for="obat_id[]" :value="__('Obat')" />
+                            <select name="obat_id[]" class="w-full border-none bg-transparent outline-none" required>
+                                <option value="">Pilih Obat</option>
+                                @foreach ($obats as $obat)
+                                    <option value="{{ $obat->id }}" 
+                                        {{ $obat->id == $obatId ? 'selected' : '' }}>
+                                        {{ $obat->nama_obat }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <x-input-label for="dosis[]" :value="__('Dosis')" />
+                            <input type="text" id="dosis" name="dosis[]" placeholder="Dosis"
+                                class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
+                                value="{{ old('dosis')[$key] }}" required>
+                            
+                            <x-input-label for="jumlah[]" :value="__('Jumlah')" />
+                            <input type="number" id="jumlah" name="jumlah[]" placeholder="Jumlah" min="1"
+                                class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
+                                value="{{ old('jumlah')[$key] }}" required>
+                            
+                            <x-input-label for="aturan_pakai[]" :value="__('Aturan Pakai')" />
+                            <input type="text" id="aturan_pakai" name="aturan_pakai[]" placeholder="Aturan Pakai"
+                                class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
+                                value="{{ old('aturan_pakai')[$key] }}" required>
+                            
+                            <!-- Tombol Hapus -->
+                            <button type="button"
+                                class="hapusObatBtn mt-2 rounded-sm bg-red-500 text-white py-1 px-2 font-bold duration-300 hover:bg-red-700">
+                                Hapus Obat
+                            </button>
+
+                        </div>
+                    @endforeach
+                @endif
             </div>
 
             <!-- Tambah Obat -->
@@ -77,12 +115,11 @@
         </form>
     </section>
 
-    <!-- Script Tambah Obat -->
     <script>
         document.getElementById('tambahObatBtn').addEventListener('click', function() {
             const obatSection = document.getElementById('obatSection');
             const newObat = `
-                <div class="mt-6">
+                <div class="mt-6 obat-item">
                     <x-input-label for="obat_id[]" :value="__('Obat')" />
                     <select name="obat_id[]" class="w-full border-none bg-transparent outline-none" required>
                         <option value="">Pilih Obat</option>
@@ -102,11 +139,30 @@
                     <x-input-label for="aturan_pakai[]" :value="__('Aturan Pakai')" />
                     <input type="text" id="aturan_pakai" name="aturan_pakai[]" placeholder="Aturan Pakai"
                         class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none" required>
+
+                    <!-- Tombol Hapus -->
+                    <button type="button" class="hapusObatBtn mt-2 rounded-sm bg-red-500 text-white py-1 px-2 font-bold duration-300 hover:bg-red-700">
+                        Hapus Obat
+                    </button>
                 </div>
             `;
+
             const div = document.createElement('div');
             div.innerHTML = newObat;
             obatSection.appendChild(div);
+
+            div.querySelector('.hapusObatBtn').addEventListener('click', function() {
+                div.remove();
+            });
+
+            document.querySelectorAll('.hapusObatBtn').forEach(button => {
+                button.addEventListener('click', function() {
+                    button.closest('.obat-item').remove();
+                });
+            });
+
         });
+
     </script>
+
 @endsection

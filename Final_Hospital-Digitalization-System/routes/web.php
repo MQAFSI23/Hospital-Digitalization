@@ -126,6 +126,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         Route::get('/pasien/notifikasi', [PasienController::class, 'semuaNotifikasi'])
             ->name('pasien.semuaNotifikasi');
+
+        Route::get('/dokter/{dokterId}/jadwal', [PasienController::class, 'getAvailableDates']);
+
+        Route::post('/janjiKunsultasi', [PasienController::class, 'janjiKonsultasi'])
+            ->name('pasien.janjiKonsultasi');
     });
 
 });

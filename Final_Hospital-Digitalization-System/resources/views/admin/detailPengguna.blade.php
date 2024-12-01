@@ -78,7 +78,7 @@
                         Edit
                     </a>
                     <x-danger-button
-                        class="bg-red-500 hover:bg-red-700 rounded duration-300 text-center flex items-center justify-center"
+                        class="!bg-red-500 hover:!bg-red-700 !rounded !duration-300 text-center flex items-center justify-center"
                         x-data=""
                         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion-{{ $user->id }}')"
                     >{{ __('Hapus') }}</x-danger-button>
@@ -116,7 +116,7 @@
                                     {{ __('Batal') }}
                                 </x-secondary-button>
 
-                                <x-danger-button type="submit" class="ms-3 bg-red-500 hover:bg-red-700 rounded duration-300">
+                                <x-danger-button type="submit" class="ms-3 !bg-red-500 hover:!bg-red-700 !rounded !duration-300">
                                     {{ __('Hapus Akun') }}
                                 </x-danger-button>
                             </div>
