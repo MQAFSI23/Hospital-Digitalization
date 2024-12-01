@@ -74,7 +74,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
+                    <a href="{{ route('pasien.semuaNotifikasi') }}" class="block px-4 py-2.5 text-slate-200 font-semibold hover:bg-indigo-700 hover:text-white rounded-lg">
                         Notifikasi
                     </a>
                 </li>

@@ -120,6 +120,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:pasien')->group(function () {
         Route::middleware('role:pasien')->get('/pasien/dashboard', [PasienController::class, 'dashboard'])
             ->name('pasien.dashboard');
+
+        Route::get('/notifikasi/{id}', [PasienController::class, 'detailNotifikasi'])
+            ->name('pasien.detailNotifikasi');
+        
+        Route::get('/pasien/notifikasi', [PasienController::class, 'semuaNotifikasi'])
+            ->name('pasien.semuaNotifikasi');
     });
 
 });
