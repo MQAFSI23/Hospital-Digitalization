@@ -281,7 +281,7 @@ class AdminController extends Controller
                 $query->orderBy('tanggal_berobat', $sortOrder);
             }
         } else {
-            $query->orderBy('tanggal_berobat', 'desc');
+            $query->orderBy('created_at', 'desc');
         }
 
         $daftarPasien = $query->get();

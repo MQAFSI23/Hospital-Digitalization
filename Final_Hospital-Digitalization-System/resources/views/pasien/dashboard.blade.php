@@ -25,29 +25,10 @@
         <div class="mt-8">
             <h2 class="text-2xl font-semibold text-gray-800">Notifikasi</h2>
             <div class="mt-4 bg-white shadow rounded">
-                @if($notifikasi->isNotEmpty())
-                    <ul class="divide-y divide-gray-200">
-                        @foreach($notifikasi as $notif)
-                            <li class="p-4 hover:bg-gray-100">
-                                <a href="{{ route('pasien.detailNotifikasi', $notif->id) }}" class="block">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-lg font-semibold text-indigo-700">
-                                                {{ $notif->judul }}
-                                            </p>
-                                            <p class="text-sm text-gray-600 mt-1">
-                                                {{ $notif->deskripsi }} 
-                                                Untuk pasien: <span class="font-semibold">{{ $notif->pasien->user->name }}</span>.
-                                            </p>
-                                        </div>
-                                        <p class="text-sm text-gray-500">
-                                            {{ Carbon::parse($notif->tanggal)->format('d-m-Y') }}
-                                        </p>
-                                    </div>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
+                @if($jumlahNotifikasi > 0)
+                    <a href="{{ route('pasien.semuaNotifikasi') }}" class="block p-4 text-indigo-600 hover:underline">
+                        Anda memiliki {{ $jumlahNotifikasi }} notifikasi baru
+                    </a>
                 @else
                     <div class="p-4 text-gray-500 text-center">
                         Tidak ada notifikasi baru.
@@ -59,6 +40,20 @@
         <!-- Daftar Dokter -->
         <div class="mt-8">
             <h2 class="text-2xl font-semibold text-gray-800">Daftar Dokter</h2>
+
+            <!-- Pencarian dan Filter -->
+            <div class="flex items-center gap-4 mt-4">
+                <input
+                    type="text"
+                    id="searchDokter"
+                    class="w-full p-2 border rounded-md"
+                    placeholder="Cari dokter berdasarkan nama atau spesialisasi...">
+                <select id="filterJenisDokter" class="p-2 border rounded-md">
+                    <option value="">Semua Jenis</option>
+                    <option value="umum">Umum</option>
+                    <option value="spesialis">Spesialis</option>
+                </select>
+            </div>
 
             <!-- Dokter Umum -->
             <div class="mt-4">
@@ -81,27 +76,31 @@
             </div>
 
             <!-- Dokter Spesialis -->
-            @foreach($dokterSpesialisasi as $spesialisasi => $dokters)
-                <div class="mt-8">
-                    <h3 class="text-xl font-semibold text-gray-700">Spesialis {{ ucwords($spesialisasi) }} ({{ $jumlahDokterSpesialis[$spesialisasi] }} Dokter)</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                        @foreach($dokters as $dokter)
-                            <div class="bg-white p-4 shadow rounded-lg hover:bg-gray-100">
-                                <p class="text-lg font-semibold text-indigo-700">{{ $dokter->user->name }}</p>
-                                <p class="text-sm text-gray-600">{{ ucfirst($dokter->jenis_dokter) }}</p>
-                                <p class="text-sm text-gray-500">{{ ucfirst($dokter->spesialisasi) }}</p>
-                                <button 
-                                    class="mt-2 inline-block text-indigo-600 hover:underline"
-                                    data-bs-toggle="modal" data-bs-target="#janjiModal"
-                                    data-dokter-id="{{ $dokter->id }}" 
-                                    data-dokter-name="{{ $dokter->user->name }}">
-                                    Buat Janji Konsultasi
-                                </button>
-                            </div>
-                        @endforeach
+            <div class="mt-4">
+                <h3 class="text-xl font-semibold text-gray-700">Dokter Spesialis ({{ $jumlahTotalDokterSpesialis }} Dokter)</h3>
+                @foreach($dokterSpesialisasi as $spesialisasi => $dokters)
+                    <div class="mt-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Spesialis {{ ucwords($spesialisasi) }} ({{ $jumlahDokterSpesialis[$spesialisasi] }} Dokter)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            @foreach($dokters as $dokter)
+                                <div class="bg-white p-4 shadow rounded-lg hover:bg-gray-100">
+                                    <p class="text-lg font-semibold text-indigo-700">{{ $dokter->user->name }}</p>
+                                    <p class="text-sm text-gray-600">{{ ucfirst($dokter->jenis_dokter) }}</p>
+                                    <p class="text-sm text-gray-500">{{ ucfirst($dokter->spesialisasi) }}</p>
+                                    <button 
+                                        class="mt-2 inline-block text-indigo-600 hover:underline"
+                                        data-bs-toggle="modal" data-bs-target="#janjiModal"
+                                        data-dokter-id="{{ $dokter->id }}" 
+                                        data-dokter-name="{{ $dokter->user->name }}">
+                                        Buat Janji Konsultasi
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
+            
         </div>
 
     </div>
@@ -134,6 +133,36 @@
     </div>
 
     <script>
+        const searchDokter = document.getElementById('searchDokter');
+        const filterJenisDokter = document.getElementById('filterJenisDokter');
+        const dokterCards = document.querySelectorAll('.grid .bg-white');
+
+        function filterDokter() {
+            const searchValue = searchDokter.value.toLowerCase();
+            const filterValue = filterJenisDokter.value;
+
+            dokterCards.forEach(card => {
+                // Ambil data dari kartu dokter
+                const nama = card.querySelector('.text-lg').textContent.toLowerCase();
+                const jenis = card.querySelector('.text-sm.text-gray-600').textContent.toLowerCase();
+                const spesialisasi = card.querySelector('.text-sm.text-gray-500')?.textContent.toLowerCase() || '';
+
+                // Cek apakah kartu cocok dengan pencarian dan filter
+                const matchesSearch = nama.includes(searchValue) || spesialisasi.includes(searchValue);
+                const matchesFilter = filterValue === '' || jenis === filterValue;
+
+                // Tampilkan atau sembunyikan kartu berdasarkan kecocokan
+                if (matchesSearch && matchesFilter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Tambahkan event listener pada input pencarian dan filter
+        searchDokter.addEventListener('input', filterDokter);
+        filterJenisDokter.addEventListener('change', filterDokter);
 
         const modal = document.getElementById('janjiModal');
         const closeModal = document.getElementById('closeModal');
@@ -180,6 +209,7 @@
                 modal.classList.add('hidden');
             }
         });
+        
     </script>
 
 @endsection

@@ -228,6 +228,16 @@ class DokterController extends Controller
                 return redirect()->back()->with('stok_error', "Stok obat {$obat->nama_obat} tidak mencukupi.");
             }
         }
+
+        if ($rekamMedis->tindakan !== $request->tindakan && !empty($request->tindakan)) {
+            Notifikasi::create([
+                'pasien_id' => $rekamMedis->pasien->id,
+                'judul' => 'Perubahan tindakan dari ' . auth()->user()->name,
+                'deskripsi' => 'Dokter memberikan tindakan: ' . $request->tindakan,
+                'tanggal' => now(),
+                'status' => false,
+            ]);
+        }
     
         $rekamMedis->update($request->only('tindakan', 'diagnosa', 'tanggal_berobat'));
     

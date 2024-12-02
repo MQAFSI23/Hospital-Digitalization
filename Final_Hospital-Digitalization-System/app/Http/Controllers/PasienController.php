@@ -13,28 +13,35 @@ class PasienController extends Controller
 {
     public function dashboard(Request $request)
     {
-        $notifikasi = Notifikasi::with('pasien.user')
-            ->where('pasien_id', auth()->user()->pasien->id)
+        $user = auth()->user();
+    
+        $jumlahNotifikasi = Notifikasi::where('pasien_id', $user->pasien->id)
             ->where('status', false)
-            ->orderBy('tanggal', 'desc')
-            ->get();
-
-        $dokterUmum = Dokter::where('jenis_dokter', 'umum')
-            ->get();
-
+            ->count();
+    
+        $dokterUmum = Dokter::where('jenis_dokter', 'umum')->get();
+    
         $dokterSpesialisasi = Dokter::where('jenis_dokter', 'spesialis')
-            ->get()->groupBy('spesialisasi');
-
+            ->get()
+            ->groupBy('spesialisasi');
+    
         $jumlahDokterUmum = $dokterUmum->count();
-        
+    
+        $jumlahTotalDokterSpesialis = Dokter::where('jenis_dokter', 'spesialis')->count();
+
         $jumlahDokterSpesialis = $dokterSpesialisasi->map(function ($dokters) {
             return $dokters->count();
         });
     
         return view('pasien.dashboard', compact(
-            'notifikasi', 'dokterUmum', 'dokterSpesialisasi', 'jumlahDokterUmum', 'jumlahDokterSpesialis'
+            'jumlahNotifikasi',
+            'dokterUmum',
+            'dokterSpesialisasi',
+            'jumlahDokterUmum',
+            'jumlahTotalDokterSpesialis',
+            'jumlahDokterSpesialis'
         ));
-    }
+    }    
 
     public function janjiKonsultasiStore(Request $request)
     {
@@ -119,7 +126,7 @@ class PasienController extends Controller
     {
         $pasienId = auth()->user()->pasien->id;
         $notifikasi = Notifikasi::where('pasien_id', $pasienId)
-            ->orderBy('tanggal', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('pasien.notifikasi', compact('notifikasi'));

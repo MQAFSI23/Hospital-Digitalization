@@ -15,7 +15,7 @@
             <div class="mt-4 bg-white shadow rounded">
                 @forelse($notifikasi as $notif)
                     <ul class="divide-y divide-gray-200">
-                        <li class="p-4 hover:bg-gray-100">
+                        <li class="p-4 hover:bg-gray-200 {{ $notif->status === 1 ? 'bg-gray-100' : '' }}">
                             <a href="{{ route('pasien.detailNotifikasi', $notif->id) }}" class="block">
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                                     <div>
