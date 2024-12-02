@@ -30,6 +30,18 @@
         </div>
     </div>
 
+    <div class="mt-4">
+        @if (session('status'))
+            <div class="p-4 mb-4 text-sm text-green-500 bg-green-100 rounded" role="alert">
+                {{ session('status') }}
+            </div>
+        @elseif (session('nothing'))
+            <div class="p-4 mb-4 text-sm text-blue-500 bg-blue-100 rounded" role="alert">
+                {{ session('nothing') }}
+            </div>
+        @endif
+    </div>
+
     <!-- Riwayat Konsultasi -->
     <div class="mt-8 bg-white p-6 rounded shadow-lg">
         <h2 class="text-xl font-semibold text-gray-800">Riwayat Konsultasi</h2>
@@ -49,12 +61,16 @@
                         <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center cursor-pointer"
                             onclick="window.location='{{ route('dokter.detailRekamMedis', $rekamMedis->id) }}';">
                             <td class="py-2 px-4">{{ $index + 1 }}</td>
-                            <td class="py-2 px-4">{{ $rekamMedis->tindakan }}</td>
+                            <td class="py-2 px-4">{{ $rekamMedis->tindakan ?? '-'}}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->diagnosa }}</td>
                             <td class="py-2 px-4">{{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</td>
-                            <td onclick="event.stopPropagation();">
+                            <td class="py-2 px-4" onclick="event.stopPropagation();">
+                                <a href="{{ route('dokter.editRekamMedis', $rekamMedis->id) }}"
+                                    class="bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-3 rounded mr-2 duration-300">
+                                    Edit
+                                </a>
                                 <a onclick="openDeleteModal({{ $rekamMedis->id }})" 
-                                        class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded duration-300">
+                                        class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded duration-300">
                                     Hapus
                                 </a>
                             </td>

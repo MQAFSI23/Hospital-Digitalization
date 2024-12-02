@@ -64,55 +64,57 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now()
             ])
             ->each(function ($user) {
-                Pasien::create([
-                    'user_id' => $user->id,
-                    'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
-                    'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
-                ]);
+                if ($user->role === 'pasien') {
+                    Pasien::create([
+                        'user_id' => $user->id,
+                        'berat_badan' => 70,
+                        'tinggi_badan' => 170,
+                    ]);
+                }
             });
 
-        User::factory() // Random Tester
-            ->count(30)
-            ->create()
-            ->each(function ($user) {
-                $user->password = Hash::make('tester123');
-                $user->email_verified_at = now();
-                $user->save();
+        // User::factory() // Random Tester
+        //     ->count(30)
+        //     ->create()
+        //     ->each(function ($user) {
+        //         $user->password = Hash::make('tester123');
+        //         $user->email_verified_at = now();
+        //         $user->save();
                 
-                if ($user->role === 'dokter') {
-                    $dokter = Dokter::factory()->create(['user_id' => $user->id]);
+        //         if ($user->role === 'dokter') {
+        //             $dokter = Dokter::factory()->create(['user_id' => $user->id]);
             
-                    JadwalTugas::factory()->create([
-                        'dokter_id' => $dokter->id,
-                    ]);
-                } elseif ($user->role === 'pasien') {
-                    Pasien::create([
-                        'user_id' => $user->id,
-                        'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
-                        'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
-                    ]);
-                }
-            });
+        //             JadwalTugas::factory()->create([
+        //                 'dokter_id' => $dokter->id,
+        //             ]);
+        //         } elseif ($user->role === 'pasien') {
+        //             Pasien::create([
+        //                 'user_id' => $user->id,
+        //                 'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
+        //                 'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
+        //             ]);
+        //         }
+        //     });
 
-        User::factory() // Random
-            ->count(10)
-            ->create()
-            ->each(function ($user) {
+        // User::factory() // Random
+        //     ->count(10)
+        //     ->create()
+        //     ->each(function ($user) {
 
-                if ($user->role === 'dokter') {
-                    $dokter = Dokter::factory()->create(['user_id' => $user->id]);
+        //         if ($user->role === 'dokter') {
+        //             $dokter = Dokter::factory()->create(['user_id' => $user->id]);
             
-                    JadwalTugas::factory()->create([
-                        'dokter_id' => $dokter->id,
-                    ]);
-                } elseif ($user->role === 'pasien') {
-                    Pasien::create([
-                        'user_id' => $user->id,
-                        'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
-                        'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
-                    ]);
-                }
-            });
+        //             JadwalTugas::factory()->create([
+        //                 'dokter_id' => $dokter->id,
+        //             ]);
+        //         } elseif ($user->role === 'pasien') {
+        //             Pasien::create([
+        //                 'user_id' => $user->id,
+        //                 'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
+        //                 'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
+        //             ]);
+        //         }
+        //     });
 
         Obat::factory()
             ->count(30)
@@ -124,23 +126,23 @@ class DatabaseSeeder extends Seeder
                     'status' => 'terisi',
                 ]);
             });
-        Feedback::factory()->count(20)->create();
+        // Feedback::factory()->count(20)->create();
 
-        RekamMedis::factory()
-            ->count(15)
-            ->has(
-                Resep::factory()
-                    ->count(3)
-                    ->state(function (array $attributes, RekamMedis $rekamMedis) {
-                        return [
-                            'rekam_medis_id' => $rekamMedis->id,
-                            'obat_id' => Obat::all()->random()->id, // Ambil obat secara acak
-                        ];
-                    }),
-                'resep'
-            )
-            ->create();
+        // RekamMedis::factory()
+        //     ->count(15)
+        //     ->has(
+        //         Resep::factory()
+        //             ->count(3)
+        //             ->state(function (array $attributes, RekamMedis $rekamMedis) {
+        //                 return [
+        //                     'rekam_medis_id' => $rekamMedis->id,
+        //                     'obat_id' => Obat::all()->random()->id, // Ambil obat secara acak
+        //                 ];
+        //             }),
+        //         'resep'
+        //     )
+        //     ->create();
 
-        PenjadwalanKonsultasi::factory()->count(15)->create();
+        // PenjadwalanKonsultasi::factory()->count(15)->create();
     }
 }

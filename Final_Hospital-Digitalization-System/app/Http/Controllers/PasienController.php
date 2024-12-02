@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PenjadwalanKonsultasi;
 use Illuminate\Http\Request;
 use App\Models\Notifikasi;
 use App\Models\Dokter;
@@ -35,6 +36,36 @@ class PasienController extends Controller
         ));
     }
 
+    public function janjiKonsultasiStore(Request $request)
+    {
+        $request->validate([
+            'dokter_id' => 'required|exists:dokter,id',
+            'tanggal_konsultasi' => 'required|date|after_or_equal:today|before_or_equal:'.now()->addWeeks(2)->toDateString(),
+        ]);
+
+        $pasienId = auth()->user()->pasien->id;
+        $existingAppointment = PenjadwalanKonsultasi::where('pasien_id', $pasienId)
+            ->where('status', '!=', 'selesai')
+            ->exists();
+
+        $namaDokter = Dokter::findOrFail($request->dokter_id)->user->name;
+    
+        if ($existingAppointment) {
+            return back()->with('error', 'Anda memiliki janji konsultasi dengan ' . $namaDokter . ' yang belum selesai.');
+        }
+
+        $tanggalKonsultasi = Carbon::createFromFormat('d-m-Y', $request->tanggal_konsultasi)->format('Y-m-d');
+
+        PenjadwalanKonsultasi::create([
+            'pasien_id' => $pasienId,
+            'dokter_id' => $request->dokter_id,
+            'tanggal_konsultasi' => $tanggalKonsultasi,
+            'status' => 'belum',
+        ]);
+
+        return redirect()->route('pasien.dashboard')->with('status', 'Janji konsultasi berhasil dibuat.');
+    }
+
     public function getAvailableDates($dokterId)
     {
         $dokter = Dokter::findOrFail($dokterId)->load('jadwalTugas');
@@ -56,7 +87,7 @@ class PasienController extends Controller
         $today = Carbon::today();
         $availableDates = [];
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 14; $i++) {
             $date = $today->copy()->addDays($i);
             if (in_array($date->format('l'), $hariTugasDokterFormatted)) {
                 $formattedDate = $date->format('d-m-Y');
@@ -71,7 +102,6 @@ class PasienController extends Controller
                 $availableDates[] = "$formattedDate ($dayName)";
             }
         }
-        \Log::info('Available dates:', $availableDates);
     
         return response()->json(['availableDates' => $availableDates]);
     }        

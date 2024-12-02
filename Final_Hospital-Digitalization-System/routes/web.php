@@ -112,6 +112,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/dokter/selesai/{penjadwalan}', [DokterController::class, 'selesaiStore'])
             ->name('dokter.selesaiStore');
         
+        Route::get('/dokter/editRekamMedis/{id}', [DokterController::class, 'editRekamMedis'])
+            ->name('dokter.editRekamMedis');
+
+        Route::put('/rekam-medis/{id}', [DokterController::class, 'updateRekamMedis'])
+            ->name('dokter.updateRekamMedis');
+        
         Route::delete('/rekam-medis/{rekamMedis}', [DokterController::class, 'destroy'])
             ->name('rekamMedis.destroy');
     });
@@ -129,8 +135,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/dokter/{dokterId}/jadwal', [PasienController::class, 'getAvailableDates']);
 
-        Route::post('/janjiKunsultasi', [PasienController::class, 'janjiKonsultasi'])
-            ->name('pasien.janjiKonsultasi');
+        Route::post('/janjiKunsultasi', [PasienController::class, 'janjiKonsultasiStore'])
+            ->name('pasien.janjiKonsultasiStore');
     });
 
 });

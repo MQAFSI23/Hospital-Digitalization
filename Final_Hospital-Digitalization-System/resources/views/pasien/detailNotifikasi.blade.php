@@ -14,7 +14,7 @@
         <div class="mt-6 bg-white shadow rounded p-6">
             <h2 class="text-xl font-semibold text-indigo-700">{{ $notifikasi->judul }}</h2>
             <p class="mt-4 text-gray-600">
-                {{ $notifikasi->deskripsi }} Untuk pasien: <span class="font-semibold">{{ $notifikasi->pasien->user->name }}</span>.
+                {{ $notifikasi->deskripsi }} | Untuk pasien: <span class="font-semibold">{{ $notifikasi->pasien->user->name }}</span>
             </p>
             <p class="mt-4 text-sm text-gray-500">Tanggal: {{ Carbon::parse($notifikasi->tanggal)->format('d-m-Y') }}</p>
         </div>

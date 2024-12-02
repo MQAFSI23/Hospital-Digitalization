@@ -24,7 +24,7 @@
                                         </p>
                                         <p class="text-sm text-gray-600 mt-1">
                                             {{ $notif->deskripsi }} 
-                                            Untuk pasien: <span class="font-semibold">{{ $notif->pasien->user->name }}</span>.
+                                            | Untuk pasien: <span class="font-semibold">{{ $notif->pasien->user->name }}</span>
                                         </p>
                                     </div>
                                     <p class="text-sm text-gray-500 mt-2 sm:mt-0">

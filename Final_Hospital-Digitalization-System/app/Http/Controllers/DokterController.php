@@ -8,6 +8,7 @@ use App\Models\Obat;
 use App\Models\Resep;
 use App\Models\Pasien;
 use App\Models\RekamMedis;
+use App\Models\Notifikasi;
 use Illuminate\Support\Facades\DB;
 use App\Models\PenjadwalanKonsultasi;
 
@@ -77,7 +78,7 @@ class DokterController extends Controller
     public function selesaiStore(Request $request, PenjadwalanKonsultasi $penjadwalan)
     {
         $request->validate([
-            'tindakan' => 'required|string',
+            'tindakan' => 'nullable|string',
             'diagnosa' => 'required|string',
             'tanggal_berobat' => 'required|date|before_or_equal:today',
             'obat_id.*' => 'nullable|exists:obat,id',
@@ -100,7 +101,7 @@ class DokterController extends Controller
         $rekamMedis = RekamMedis::create([
             'pasien_id' => $penjadwalan->pasien_id,
             'dokter_id' => $penjadwalan->dokter_id,
-            'tindakan' => $request->tindakan,
+            'tindakan' => $request->tindakan ?? null,
             'diagnosa' => $request->diagnosa,
             'tanggal_berobat' => $request->tanggal_berobat,
             'created_by' => auth()->user()->dokter->id,
@@ -118,8 +119,19 @@ class DokterController extends Controller
                     'created_by' => auth()->user()->dokter->id,
                 ];
             }
+
             Resep::insert($resepData);
         }
+
+        if (!empty($request->tindakan)) {
+            Notifikasi::create([
+                'pasien_id' => $rekamMedis->pasien->id,
+                'judul' => 'Tindakan dari ' . auth()->user()->name,
+                'deskripsi' => 'Dokter memberikan tindakan: ' . $request->tindakan,
+                'tanggal' => now(),
+                'status' => false,
+            ]);
+        } 
 
         $penjadwalan->status = 'selesai';
         $penjadwalan->save();
@@ -131,6 +143,112 @@ class DokterController extends Controller
         return redirect()->route('dokter.dashboard')->with('status', $message);
     }
 
+    public function editRekamMedis($id)
+    {
+        $rekamMedis = RekamMedis::with('resep.obat')->findOrFail($id);
+    
+        $obats = Obat::all();
+    
+        return view('dokter.editRekamMedis', compact('rekamMedis', 'obats'));
+    }
+
+    public function updateRekamMedis(Request $request, $id)
+    {
+        $request->validate([
+            'tindakan' => 'nullable|string|max:255',
+            'diagnosa' => 'required|string|max:255',
+            'tanggal_berobat' => 'required|date',
+            'obat_id.*' => 'nullable|exists:obat,id',
+            'dosis.*' => 'nullable|string|max:100',
+            'jumlah.*' => 'nullable|integer|min:0',
+        ]);
+    
+        $rekamMedis = RekamMedis::with('resep')->findOrFail($id);
+    
+        // Periksa perubahan di rekam medis
+        $isRekamMedisChanged = false;
+        if ($rekamMedis->tindakan !== $request->tindakan || 
+            $rekamMedis->diagnosa !== $request->diagnosa || 
+            $rekamMedis->tanggal_berobat !== $request->tanggal_berobat) {
+            $isRekamMedisChanged = true;
+        }
+    
+        $existingResep = $rekamMedis->resep->keyBy('obat_id')->toArray();  // Key by obat_id untuk memudahkan pencarian
+    
+        $isResepChanged = false;
+    
+        $newResep = [];
+        if ($request->obat_id) {  // Pastikan obat_id ada dalam request
+            foreach ($request->obat_id as $key => $obatId) {
+                if ($obatId) {  // Pastikan obatId tidak kosong
+                    $newResep[$obatId] = [
+                        'obat_id' => $obatId,
+                        'dosis' => $request->dosis[$key],
+                        'jumlah' => $request->jumlah[$key],
+                        'aturan_pakai' => $request->aturan_pakai[$key],
+                    ];
+                }
+            }
+        }
+    
+        $deletedResep = [];
+        $updatedResep = [];
+    
+        foreach ($existingResep as $obatId => $resep) {
+            if (!isset($newResep[$obatId])) {
+                $deletedResep[$obatId] = $resep;
+                $isResepChanged = true; // Tandai perubahan jika ada yang dihapus
+            } else {
+                // Cek apakah ada perubahan dalam resep
+                if ($resep['dosis'] !== $newResep[$obatId]['dosis'] ||
+                    $resep['jumlah'] !== $newResep[$obatId]['jumlah'] ||
+                    $resep['aturan_pakai'] !== $newResep[$obatId]['aturan_pakai']) {
+                    $updatedResep[$obatId] = $newResep[$obatId];
+                    $isResepChanged = true; // Tandai perubahan jika ada yang diubah
+                }
+            }
+        }
+    
+        foreach ($newResep as $obatId => $resep) {
+            if (!isset($existingResep[$obatId])) {
+                // Obat baru ditambahkan
+                $updatedResep[$obatId] = $resep;
+                $isResepChanged = true; // Tandai perubahan jika ada obat baru
+            }
+        }
+    
+        if (!$isRekamMedisChanged && !$isResepChanged) {
+            return redirect()->route('dokter.detailPasien', $rekamMedis->pasien_id)
+                            ->with('nothing', 'Tidak ada perubahan yang dibuat.');
+        }
+    
+        foreach ($newResep as $key => $resep) {
+            $obat = Obat::find($resep['obat_id']);
+            if ($obat->stok < $resep['jumlah']) {
+                return redirect()->back()->with('stok_error', "Stok obat {$obat->nama_obat} tidak mencukupi.");
+            }
+        }
+    
+        $rekamMedis->update($request->only('tindakan', 'diagnosa', 'tanggal_berobat'));
+    
+        // Hapus resep yang dihapus
+        foreach ($deletedResep as $obatId => $resep) {
+            $rekamMedis->resep()->where('obat_id', $obatId)->delete();
+        }
+    
+        // Tambahkan atau perbarui resep
+        foreach ($updatedResep as $resep) {
+            $rekamMedis->resep()->updateOrCreate(
+                ['obat_id' => $resep['obat_id']], // Cari berdasarkan obat_id
+                $resep // Update atau buat dengan data baru
+            );
+        }
+    
+        return redirect()->route('dokter.detailPasien', $rekamMedis->pasien_id)
+                        ->with('status', 'Rekam medis berhasil diperbarui.');
+    }
+                
+    
     public function daftarPasien(Request $request)
     {
         $dokterId = auth()->user()->dokter->id;

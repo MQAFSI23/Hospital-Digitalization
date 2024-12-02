@@ -74,7 +74,7 @@
 
                         <!-- Tampilkan rekam medis jika ada -->
                         @if($penjadwalan->pasien->rekamMedisPasien)
-                            <td class="py-2 px-4">{{ $penjadwalan->pasien->rekamMedisPasien->first()->tindakan ?? 'Belum ada tindakan' }}</td>
+                            <td class="py-2 px-4">{{ $penjadwalan->pasien->rekamMedisPasien->first()->tindakan ?? '-' }}</td>
                         @else
                             <td class="py-2 px-4">Rekam medis belum ada</td>
                         @endif
@@ -117,7 +117,7 @@
                             <td class="py-2 px-4">{{ $index + 1 }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->pasien->user->name }}</td>
                             <td class="py-2 px-4">{{ $rekamMedis->diagnosa }}</td>
-                            <td class="py-2 px-4">{{ $rekamMedis->tindakan }}</td>
+                            <td class="py-2 px-4">{{ $rekamMedis->tindakan ?? '-'}}</td>
                             <td class="py-2 px-4">{{ Carbon::parse($rekamMedis->tanggal_berobat)->format('d-m-Y') }}</td>
                         </tr>
                     @empty

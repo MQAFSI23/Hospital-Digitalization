@@ -14,9 +14,8 @@ class PenjadwalanKonsultasi extends Model
     protected $fillable = [
         'pasien_id',
         'dokter_id',
+        'status',
         'tanggal_konsultasi',
-        'konfirmasi',
-        'selesai',
     ];
 
     /**

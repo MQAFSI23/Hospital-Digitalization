@@ -11,6 +11,16 @@
         <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
         <p class="mt-4 text-gray-600">Halo, {{ auth()->user()->name }}👋</p>
 
+        @if(session('status'))
+            <div class="p-4 mt-4 text-sm text-green-500 bg-green-100 rounded">
+                {{ session('status') }}
+            </div>
+        @elseif(session('error'))
+            <div class="p-4 mt-4 text-sm text-red-500 bg-red-100 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Notifikasi -->
         <div class="mt-8">
             <h2 class="text-2xl font-semibold text-gray-800">Notifikasi</h2>
@@ -59,7 +69,7 @@
                             <p class="text-lg font-semibold text-indigo-700">{{ $dokter->user->name }}</p>
                             <p class="text-sm text-gray-600">{{ ucfirst($dokter->jenis_dokter) }}</p>
                             <button 
-                                class="mt-2 inline-block text-indigo-600 hover:text-indigo-800"
+                                class="mt-2 inline-block text-indigo-600 hover:underline"
                                 data-bs-toggle="modal" data-bs-target="#janjiModal"
                                 data-dokter-id="{{ $dokter->id }}" 
                                 data-dokter-name="{{ $dokter->user->name }}">
@@ -81,7 +91,7 @@
                                 <p class="text-sm text-gray-600">{{ ucfirst($dokter->jenis_dokter) }}</p>
                                 <p class="text-sm text-gray-500">{{ ucfirst($dokter->spesialisasi) }}</p>
                                 <button 
-                                    class="mt-2 inline-block text-indigo-600 hover:text-indigo-800"
+                                    class="mt-2 inline-block text-indigo-600 hover:underline"
                                     data-bs-toggle="modal" data-bs-target="#janjiModal"
                                     data-dokter-id="{{ $dokter->id }}" 
                                     data-dokter-name="{{ $dokter->user->name }}">
@@ -98,13 +108,13 @@
 
     <!-- Modal -->
     <div id="janjiModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg w-96 p-6">
+        <div class="bg-white rounded-lg w-96 p-8 mx-4">
             <div class="flex justify-between items-center">
                 <h5 class="text-xl font-semibold" id="janjiModalLabel">Buat Janji Konsultasi</h5>
                 <button id="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
             </div>
             <div class="mt-4">
-                <form action="{{ route('pasien.janjiKonsultasi') }}" method="POST">
+                <form action="{{ route('pasien.janjiKonsultasiStore') }}" method="POST">
                     @csrf
                     <input type="hidden" name="dokter_id" id="dokter_id">
                     <div class="mb-4">
@@ -112,18 +122,19 @@
                         <input type="text" class="mt-1 block w-full p-2 border rounded-md bg-gray-100" id="dokter_name" readonly>
                     </div>
                     <div class="mb-4">
-                        <label for="tanggal_konsultasi" class="block text-sm font-medium text-gray-700">Pilih Tanggal</label>
+                        <label for="tanggal_konsultasi" class="block text-sm font-medium text-gray-700">Pilih Tanggal (maksimal dua pekan ke depan)</label>
                         <select name="tanggal_konsultasi" id="tanggal_konsultasi" class="form-control">
                             <!-- Opsi tanggal akan diisi melalui JavaScript -->
                         </select>
                     </div>
-                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg">Buat Janji</button>
+                    <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-700 duration-300 text-white py-2 rounded">Buat Janji</button>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
+
         const modal = document.getElementById('janjiModal');
         const closeModal = document.getElementById('closeModal');
 

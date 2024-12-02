@@ -7,7 +7,7 @@
 
         <!-- Session Error -->
         @if ($errors->has('stok_error'))
-            <div class="mb-4 text-red-500 text-center">
+            <div class="mb-4 text-red-600 text-center">
                 {{ $errors->first('stok_error') }}
             </div>
         @endif
@@ -20,7 +20,7 @@
                 <x-input-label for="tindakan" :value="__('Tindakan')" />
                 <input type="text" id="tindakan" name="tindakan" placeholder="Tindakan"
                     class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"
-                    value="{{ old('tindakan') }}" required>
+                    value="{{ old('tindakan') }}">
             </div>
             @error('tindakan')
                 <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
