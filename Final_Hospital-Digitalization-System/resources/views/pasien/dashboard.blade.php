@@ -27,11 +27,11 @@
             <div class="mt-4 bg-white shadow rounded">
                 @if($jumlahNotifikasi > 0)
                     <a href="{{ route('pasien.semuaNotifikasi') }}" class="block p-4 text-indigo-600 hover:underline">
-                        Anda memiliki {{ $jumlahNotifikasi }} notifikasi baru
+                        Anda memiliki {{ $jumlahNotifikasi }} notifikasi yang belum dibaca.
                     </a>
                 @else
                     <div class="p-4 text-gray-500 text-center">
-                        Tidak ada notifikasi baru.
+                        Tidak ada notifikasi yang belum dibaca.
                     </div>
                 @endif
             </div>

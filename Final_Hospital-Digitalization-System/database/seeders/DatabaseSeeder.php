@@ -96,25 +96,27 @@ class DatabaseSeeder extends Seeder
         //         }
         //     });
 
-        // User::factory() // Random
-        //     ->count(10)
-        //     ->create()
-        //     ->each(function ($user) {
+        User::factory() // Random
+            ->count(30)
+            ->create()
+            ->each(function ($user) {
+                $user->password = Hash::make('tester123');
+                $user->email_verified_at = now();
 
-        //         if ($user->role === 'dokter') {
-        //             $dokter = Dokter::factory()->create(['user_id' => $user->id]);
+                if ($user->role === 'dokter') {
+                    $dokter = Dokter::factory()->create(['user_id' => $user->id]);
             
-        //             JadwalTugas::factory()->create([
-        //                 'dokter_id' => $dokter->id,
-        //             ]);
-        //         } elseif ($user->role === 'pasien') {
-        //             Pasien::create([
-        //                 'user_id' => $user->id,
-        //                 'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
-        //                 'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
-        //             ]);
-        //         }
-        //     });
+                    JadwalTugas::factory()->create([
+                        'dokter_id' => $dokter->id,
+                    ]);
+                } elseif ($user->role === 'pasien') {
+                    Pasien::create([
+                        'user_id' => $user->id,
+                        'berat_badan' => fake()->randomFloat(1, 40, 120), // Berat badan antara 40-120 kg
+                        'tinggi_badan' => fake()->randomFloat(1, 140, 200), // Tinggi badan antara 140-200 cm
+                    ]);
+                }
+            });
 
         Obat::factory()
             ->count(30)

@@ -42,9 +42,17 @@ class DokterController extends Controller
         });
 
         $totalKonsul = $pasienKonsul->count();
+
+        $pasienJanji = PenjadwalanKonsultasi::with('pasien')
+            ->where('status', 'belum')
+            ->where('dokter_id', $dokterId)
+            ->whereDate('tanggal_konsultasi', '>', Carbon::today())
+            ->get();
         
+        $totalJanji = $pasienJanji->count();
+
         return view('dokter.dashboard', compact(
-            'pasienSelesai', 'pasienKonsul', 'totalKonsul', 'totalPasienSelesai', 'jadwalDokter'));
+            'pasienSelesai', 'pasienKonsul', 'totalKonsul', 'totalPasienSelesai', 'jadwalDokter', 'pasienJanji', 'totalJanji'));
     }
 
     /**
@@ -66,6 +74,22 @@ class DokterController extends Controller
         return array_map(function($hari) use ($hariIndo) {
             return $hariIndo[$hari] ?? null; // Mengubah hari Indonesia ke format DAYOFWEEK (1-7)
         }, $hariTugas);
+    }
+
+    public function batalkanKonsultasi($id)
+    {
+        $penjadwalan = PenjadwalanKonsultasi::findOrFail($id);
+        $penjadwalan->delete();
+
+        Notifikasi::create([
+            'pasien_id' => $penjadwalan->pasien_id,
+            'judul' => 'Konsultasi dibatalkan',
+            'deskripsi' => 'Konsultasi dengan ' . $penjadwalan->dokter->user->name . ' pada tanggal ' . $penjadwalan->tanggal_konsultasi . ' dibatalkan.',
+            'tanggal' => now(),
+            'status' => false,
+        ]);
+
+        return redirect()->route('dokter.dashboard')->with('status', 'Konsultasi berhasil dibatalkan.');
     }
 
     public function selesaiKonsultasi(PenjadwalanKonsultasi $penjadwalan)

@@ -71,19 +71,15 @@
                         onclick="window.location='{{ route('dokter.detailPasien', $penjadwalan->pasien->id) }}';">
                         <td class="py-2 px-4">{{ $index + 1 }}</td>
                         <td class="py-2 px-4">{{ $penjadwalan->pasien->user->name }}</td>
-
-                        <!-- Tampilkan rekam medis jika ada -->
-                        @if($penjadwalan->pasien->rekamMedisPasien)
-                            <td class="py-2 px-4">{{ $penjadwalan->pasien->rekamMedisPasien->first()->tindakan ?? '-' }}</td>
-                        @else
-                            <td class="py-2 px-4">Rekam medis belum ada</td>
-                        @endif
-
+                        <td class="py-2 px-4">{{ $penjadwalan->pasien->rekamMedisPasien->first()->tindakan ?? '-' }}</td>
                         <td class="py-2 px-4">{{ Carbon::parse($penjadwalan->tanggal_konsultasi)->format('d-m-Y') }}</td>
 
                         <!-- Aksi Selesai -->
                         <td class="py-2 px-4" onclick="event.stopPropagation();">
                             <a href="{{ route('dokter.selesaiKonsultasi', $penjadwalan->id) }}" class="bg-green-500 text-white px-4 py-2 rounded">Selesai</a>
+                            <a href="{{ route('dokter.batalkanKonsultasi', $penjadwalan->id) }}" 
+                            class="bg-red-500 text-white px-4 py-2 rounded ml-2"
+                            onclick="return confirm('Apakah Anda yakin ingin membatalkan konsultasi ini?');">Batalkan</a>
                         </td>
                     </tr>
                 @empty
@@ -98,7 +94,7 @@
 
     <!-- Pasien yang Telah Diperiksa Hari Ini -->
     <div class="mt-8 bg-white p-6 rounded shadow-lg">
-        <h2 class="text-xl font-semibold text-gray-800">Pasien yang Telah Diperiksa Hari Ini: {{ $totalPasienSelesai }}</h2>
+        <h2 class="text-xl font-semibold text-gray-800">Daftar Pasien yang Telah Diperiksa Hari Ini: {{ $totalPasienSelesai }}</h2>
         <div class="overflow-y-auto overflow-x-auto max-h-60 mt-4">
             <table class="min-w-full border-collapse table-fixed">
                 <thead class="bg-indigo-600 text-white">
@@ -123,6 +119,44 @@
                     @empty
                         <tr>
                             <td colspan="4" class="py-3 text-left text-gray-500">Belum ada pasien yang telah diperiksa hari ini.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Daftar Pasien yang Telah Membuat Janji -->
+    <div class="mt-8 bg-white p-6 rounded shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-800">Daftar Pasien yang Telah Membuat Janji: {{ $totalJanji }}</h2>
+        <div class="overflow-y-auto overflow-x-auto max-h-60 mt-4">
+            <table class="min-w-full border-collapse table-fixed">
+                <thead class="bg-indigo-600 text-white">
+                    <tr>
+                        <th class="py-2 px-4 w-16">No</th>
+                        <th class="py-2 px-4">Nama Pasien</th>
+                        <th class="py-2 px-4">Tindakan</th>
+                        <th class="py-2 px-4">Tanggal Konsultasi</th>
+                        <th class="py-2 px-4">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($pasienJanji as $index => $penjadwalan)
+                        <tr class="{{ $index % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-indigo-100 text-center cursor-pointer"
+                            onclick="window.location='{{ route('dokter.detailPasien', $penjadwalan->pasien->id) }}';">
+                            <td class="py-2 px-4">{{ $index + 1 }}</td>
+                            <td class="py-2 px-4">{{ $penjadwalan->pasien->user->name }}</td>
+                            <td class="py-2 px-4">{{ $penjadwalan->pasien->rekamMedisPasien->first()->tindakan ?? '-' }}</td>
+                            <td class="py-2 px-4">{{ Carbon::parse($penjadwalan->tanggal_konsultasi)->format('d-m-Y') }}</td>
+                            <td class="py-2 px-4">
+                                <a href="{{ route('dokter.batalkanKonsultasi', $penjadwalan->id) }}" 
+                                class="bg-red-500 text-white px-4 py-2 rounded"
+                                onclick="return confirm('Apakah Anda yakin ingin membatalkan janji ini?');">Batalkan</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-3 text-left text-gray-500">Belum ada janji yang terjadwal.</td>
                         </tr>
                     @endforelse
                 </tbody>

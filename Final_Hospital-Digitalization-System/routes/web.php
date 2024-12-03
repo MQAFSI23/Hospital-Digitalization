@@ -111,6 +111,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         Route::post('/dokter/selesai/{penjadwalan}', [DokterController::class, 'selesaiStore'])
             ->name('dokter.selesaiStore');
+
+        Route::get('/dokter/batalkan-konsultasi/{id}', [DokterController::class, 'batalkanKonsultasi'])
+            ->name('dokter.batalkanKonsultasi');
         
         Route::get('/dokter/editRekamMedis/{id}', [DokterController::class, 'editRekamMedis'])
             ->name('dokter.editRekamMedis');
